@@ -36,14 +36,23 @@ var certificadosPersonales = [
         identificador: 'prework-desarrollo-web'
     },
     {
+        nombre: 'Git y Github',
+        institucion: 'Platzi',
+        ubicacion: 'Web',
+        descripcion: 'Conceptos básicos y avanzandos de Git y Github.',
+        descripcionModal: 'Certificado de Platzi.',
+        nombrePDF: 'diploma-git-github.pdf',
+        identificador: 'diploma-git-github'
+    },
+    {
         nombre: 'Desarrollo de Software',
         institucion: 'Casa de la cultura',
         ubicacion: 'Rionegro, Antioquia',
-        descripcion: 'Semillero sobre conceptos básicos de programación',
+        descripcion: 'Semillero sobre conceptos básicos de programación.',
         descripcionModal: 'Semillero, casa de la cultura.',
         nombrePDF: 'casa-cultura-programacion.pdf',
         identificador: 'casa-cultura-programacion'
-    }
+    }    
 ];
 
 var mostrarCertificados = () => {
