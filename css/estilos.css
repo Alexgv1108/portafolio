@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Reggae+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+body {
+    --fondo: linear-gradient(to bottom, rgba(192, 187, 187, 0.233), rgba(192, 187, 187, 0.233), rgba(192, 187, 187, 0.555) );
+}
+
+header {
+    width: 100%;
+    height: 50vh;
+    background: var(--fondo);
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+header .contenido {
+    width: 100%;
+    text-align: right;
+    margin-right: 10%;
+}
+
+header .contenido h1 {
+    color: #000;
+    font-size: 60px;
+    font-family: 'Reggae One', cursive;
+    margin: 0;
+}
+
+header .contenido span {
+    color: rgba(187, 31, 31, 0.637);
+    font-family: 'Bebas Neue', cursive;
+}
+
+footer {
+    width: 100%;
+    background: var(--fondo);
+    padding: 20px;
+    margin-top: 30px;
+}
+
+footer span {
+    display: block;
+    text-align: center;
+    font-family: 'Bebas Neue', cursive;
+}
+
+.loader-pagina {
+    height: 100px;
+}
+
+.quitar {
+    display: none;
+}
+
+.image.content {
+    height: 50vh;
+} 
+
+@media(max-height: 300px) {
+    embed {
+        width: 100%;
+        height: 35%;
+    }
+}
+
+@media(min-height: 300px) and (max-height: 350px) {
+    embed {
+        width: 100%;
+        height: 45%;
+    }
+}
+
+@media(min-height: 350px) and (max-height: 370px) {
+    embed {
+        width: 100%;
+        height: 55%;
+    }
+}
+
+@media(min-height: 370px) and (max-height: 400px) {
+    embed {
+        width: 100%;
+        height: 65%;
+    }
+}
+
+@media(min-height: 400px) and (max-height: 450px) {
+    embed {
+        width: 100%;
+        height: 75%;
+    }
+}
+
+@media(min-height: 450px) and (max-height: 500px) {
+    embed {
+        width: 100%;
+        height: 80%;
+    }
+}
+
+@media(min-height: 500px) and (max-height: 700px) {   
+    embed {
+        width: 100%;
+        height: 90%;
+    }
+}
+
+@media(min-height: 700px) {   
+    embed {
+        width: 100%;
+        height: 93%;
+    }
+}
+
+@media(max-width: 800px) {   
+    .modal-pdf {
+        display: none !important;
+    }
+}
+
+@media(min-width: 800px) {   
+    .modal-pdf-movil {
+        display: none !important;
+    }
+}
+
+@media(width: 800px) {
+    .modal-pdf-movil {
+        display: flex !important;
+    }
+}
