@@ -19,9 +19,9 @@ body {
 .triki {
     width: 250px;
     height: 250px;
-    -webkit-box-shadow: 2px 2px 5px #999;
-    -moz-box-shadow: 2px 2px 5px #999;
-    box-shadow: 10px 10px 20px #999;
+    -webkit-box-shadow: 5px 10px 20px #999;
+    -moz-box-shadow: 5px 10px 20px #999;
+    box-shadow: 5px 10px 20px #999;
     margin-left: 50px;
     position: absolute;
 }
