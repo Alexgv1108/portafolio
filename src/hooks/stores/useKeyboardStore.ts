@@ -5,6 +5,10 @@ export const useKeyboardStore = create<KeyboardState>((set, get) => ({
     lastKey: undefined,
     pressedKeys: new Set<string>(),
 
+    setLastKey: (key: string) => {
+        set({ lastKey: key })
+    },
+
     onKeyDown: (key: string) => {
         set((state) => {
             if (state.pressedKeys.has(key)) {

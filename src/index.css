@@ -1,3 +1,9 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@layer components {
+    .bg-gradient-title {
+        @apply bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent font-extrabold;
+    }
+}

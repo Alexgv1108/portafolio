@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
-import { NavBar } from "../common/NavBar";
 import { Background } from "../common/Background";
 import { Character } from "../character/Character";
 import { WASDControls } from '../character/WASDControls';
+import { LightAndDarkMode } from "../button/LightAndDarkMode";
+import { Footer } from '../landing/Footer';
 
 const BaseLayout = ({ children }: { children: ReactNode }) => {
 
@@ -11,8 +12,11 @@ const BaseLayout = ({ children }: { children: ReactNode }) => {
             <Background />
             <Character />
             <WASDControls />
-            <NavBar />
-            {children}
+            <LightAndDarkMode />
+            <div className="relative w-full min-h-screen block justify-center overflow-hidden pt-10">
+                {children}
+            </div>
+            <Footer />
         </>
     );
 };

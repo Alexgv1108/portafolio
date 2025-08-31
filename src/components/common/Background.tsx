@@ -1,6 +1,6 @@
 export const Background = () => {
     return (
-        <div className="w-full h-screen absolute top-0 left-0 pointer-events-none">
+        <div className="w-full h-screen fixed top-0 left-0 pointer-events-none">
             <div className="absolute inset-0 overflow-hidden bg-white dark:bg-gray-950 transition-colors duration-500">
                 {/* Formas para Light Mode */}
                 <div className="absolute top-0 left-1/4 w-96 h-96 
