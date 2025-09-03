@@ -7,11 +7,12 @@ const SCROLL_STEP = 2;
 
 export const useNearBottom = () => {
     const threshold = 50;
-    const { y, setIsScrolling, setY } = useCharacterStore(
+    const { x, y, setIsScrolling, setPosition } = useCharacterStore(
         useShallow((state) => ({
+            x: state.x,
             y: state.y,
             setIsScrolling: state.setIsScrolling,
-            setY: state.setY,
+            setPosition: state.setPosition,
         }))
     );
 
@@ -30,7 +31,7 @@ export const useNearBottom = () => {
         };
 
         handleCheck();
-    }, [y, setIsScrolling, setY]);
+    }, [y, setIsScrolling]);
 
     useEffect(() => {
         if (!isNearBottom) return;
@@ -39,14 +40,14 @@ export const useNearBottom = () => {
 
         const scrollStep = () => {
             window.scrollBy({ top: SCROLL_STEP, behavior: "auto" });
-            setY(y + SCROLL_STEP);
+            setPosition(x, y + SCROLL_STEP);
             animationFrameId = requestAnimationFrame(scrollStep);
         };
 
         animationFrameId = requestAnimationFrame(scrollStep);
 
         return () => cancelAnimationFrame(animationFrameId);
-    }, [isNearBottom, y, setY]);
+    }, [isNearBottom, x, y, setPosition]);
 
     return isNearBottom;
 };

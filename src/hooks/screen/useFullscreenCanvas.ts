@@ -34,9 +34,7 @@ export function useFullscreenCanvas() {
 
         resize();
         window.addEventListener("resize", resize);
-
         setCanvas(canvas);
-
         return () => {
             window.removeEventListener("resize", resize);
         };

@@ -14,9 +14,10 @@ export function useCharacterMovement() {
         }))
     );
 
-    const { changeDirection } = useCharacterStore(
+    const { changeDirection, setMoving } = useCharacterStore(
         useShallow((state) => ({
             changeDirection: state.changeDirection,
+            setMoving: state.setMoving,
         }))
     );
 
@@ -33,27 +34,33 @@ export function useCharacterMovement() {
 
         if (directions.length === 0) return Direction.Idle;
 
-        // Single direction
+        // Movimiento simple
         if (directions.length === 1) {
             return directions[0];
         }
 
-        // Diagonal movement - direct mapping for better performance
+        // Movimiento diagonal
         const dirSet = new Set(directions);
         
-        if (dirSet.has(Direction.Up) && dirSet.has(Direction.Left)) return Direction.UpLeft;
-        if (dirSet.has(Direction.Up) && dirSet.has(Direction.Right)) return Direction.UpRight;
-        if (dirSet.has(Direction.Down) && dirSet.has(Direction.Left)) return Direction.DownLeft;
-        if (dirSet.has(Direction.Down) && dirSet.has(Direction.Right)) return Direction.DownRight;
+        if (dirSet.has(Direction.Up) && dirSet.has(Direction.Right)) {
+            return Direction.UpRight;
+        } else if (dirSet.has(Direction.Down) && dirSet.has(Direction.Right)) {
+            return Direction.DownRight;
+        } else if (dirSet.has(Direction.Up) && dirSet.has(Direction.Left)) {
+            return Direction.UpLeft;
+        } else if (dirSet.has(Direction.Down) && dirSet.has(Direction.Left)) {
+            return Direction.DownLeft;
+        }
 
         return directions[0];
     }, [pressedKeys]);
 
     useEffect(() => {
-        // Only update if direction actually changed
+        // Solo actualizar si la dirección realmente cambió
         if (lastDirectionRef.current !== currentDirection) {
             lastDirectionRef.current = currentDirection;
             changeDirection(currentDirection);
+            setMoving(currentDirection !== Direction.Idle);
         }
-    }, [currentDirection, changeDirection]);
+    }, [currentDirection, changeDirection, setMoving]);
 }
