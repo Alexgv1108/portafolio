@@ -3,12 +3,12 @@ import { useCharacterStore } from "../stores/useCharacterStore";
 import { useCanvasStore } from "../stores/useCanvasStore";
 import { useShallow } from "zustand/shallow";
 import type { CharacterSpriteOptions } from "../../models/interfaces/CharacterSpriteOptions";
-import { useCharacterSprite } from "./useCharacterSprite";
+import { getCachedCharacterImage, areAllSpritesLoaded } from "../../helpers/getCharacterSprite";
 
 export function useDrawCharacter({
     width,
     height,
-    clear = true,
+    shouldRender = true,
 }: CharacterSpriteOptions) {
     const { ctx } = useCanvasStore(
         useShallow((state) => ({ ctx: state.ctx }))
@@ -22,40 +22,32 @@ export function useDrawCharacter({
         }))
     );
 
-    const sprite = useCharacterSprite(direction);
-
-    const imageCache = useRef<Map<string, HTMLImageElement>>(new Map());
-    const lastDrawRef = useRef<{ x: number; y: number; sprite: string } | null>(null);
+    const lastDrawRef = useRef<{ x: number; y: number; direction: string } | null>(null);
 
     const draw = useCallback(() => {
-        if (!ctx) return;
+        if (!ctx || !shouldRender) return;
+        
+        // Solo dibujar si todos los sprites están cargados
+        if (!areAllSpritesLoaded()) return;
 
-        let img = imageCache.current.get(sprite);
+        // Intentar obtener la imagen cacheada
+        const img = getCachedCharacterImage(direction);
 
-        if (!img) {
-            img = new Image();
-            img.src = sprite;
-            imageCache.current.set(sprite, img);
-            img.onload = () => {
-                if (clear) ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                ctx.drawImage(img!, x, y, width, height);
-                lastDrawRef.current = { x, y, sprite };
-            };
-            return;
+        if (!img) return;
+
+        // Limpiar el área anterior del personaje
+        const last = lastDrawRef.current;
+        if (last) {
+            ctx.clearRect(last.x, last.y, width, height);
         }
 
-        if (img.complete) {
-            const last = lastDrawRef.current;
-            if (last && last.x === x && last.y === y && last.sprite === sprite) {
-                return;
-            }
+        // Dibujar la imagen en la nueva posición
+        ctx.drawImage(img, x, y, width, height);
+        lastDrawRef.current = { x, y, direction };
 
-            if (clear) ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-            ctx.drawImage(img!, x, y, width, height);
-            lastDrawRef.current = { x, y, sprite };
-        }
-    }, [ctx, sprite, x, y, width, height, clear]);
+    }, [ctx, direction, x, y, width, height, shouldRender]);
 
+    // Ejecutar directamente cuando cambie la posición o dirección
     useEffect(() => {
         draw();
     }, [draw]);

@@ -4,10 +4,11 @@ import { directionVectors } from "../../constants/directionVectors";
 import { useCharacterStore } from "../stores/useCharacterStore";
 import { Direction } from "../../models/enums/Direction";
 
-const SPEED = 600; // px/seg
+const SPEED = 1000; // px/seg
 const SPRITE_WIDTH = 200;
 const SPRITE_HEIGHT = 300;
 const MAX_DELTA = 1/30; // Máximo delta para evitar saltos
+const MIN_MOVEMENT_THRESHOLD = 0.1;
 
 export function useCharacterPosition() {
     const { direction, updateVelocity, setPosition, velocityX, velocityY } = useCharacterStore(
@@ -46,7 +47,7 @@ export function useCharacterPosition() {
             updateVelocity(0, 0);
         }
 
-        // Aplicar velocidad a la posición inmediatamente
+        // Aplicar velocidad a la posición con threshold para evitar parpadeos
         if (Math.abs(velocityX) > 0.01 || Math.abs(velocityY) > 0.01) {
             const state = useCharacterStore.getState();
             
@@ -54,14 +55,20 @@ export function useCharacterPosition() {
             const newX = state.x + velocityX * delta;
             const newY = state.y + velocityY * delta;
 
-            // Aplicar límites
-            const maxX = window.innerWidth - SPRITE_WIDTH;
-            const maxY = window.innerHeight - SPRITE_HEIGHT;
+            // Solo actualizar si el movimiento es significativo
+            const deltaX = Math.abs(newX - state.x);
+            const deltaY = Math.abs(newY - state.y);
             
-            const clampedX = Math.max(0, Math.min(newX, maxX));
-            const clampedY = Math.max(0, Math.min(newY, maxY));
+            if (deltaX > MIN_MOVEMENT_THRESHOLD || deltaY > MIN_MOVEMENT_THRESHOLD) {
+                // Aplicar límites
+                const maxX = window.innerWidth - SPRITE_WIDTH;
+                const maxY = window.innerHeight - SPRITE_HEIGHT;
+                
+                const clampedX = Math.max(0, Math.min(newX, maxX));
+                const clampedY = Math.max(0, Math.min(newY, maxY));
 
-            setPosition(clampedX, clampedY);
+                setPosition(clampedX, clampedY);
+            }
         }
 
         requestRef.current = requestAnimationFrame(animate);

@@ -3,7 +3,7 @@ import type { CharacterState } from "../../models/interfaces/CharacterState";
 import { Direction } from "../../models/enums/Direction";
 
 const SPRITE_WIDTH = 160; // en px
-const MAX_VELOCITY = 200; // Velocidad máxima
+const MAX_VELOCITY = 600; // Velocidad máxima aumentada
 
 export const useCharacterStore = create<CharacterState>((set, get) => ({
     // Posición actual
