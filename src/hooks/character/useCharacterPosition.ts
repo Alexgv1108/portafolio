@@ -3,13 +3,14 @@ import { useShallow } from "zustand/shallow";
 import { directionVectors } from "../../constants/directionVectors";
 import { useCharacterStore } from "../stores/useCharacterStore";
 
-const SPEED = 800; // px/seg
-const SPRITE_WIDTH = 200; // w-40
-const SPRITE_HEIGHT = 300; // h-64
+const SPEED = 400; // px/seg
+const SPRITE_WIDTH = 200;
+const SPRITE_HEIGHT = 300;
 
 export function useCharacterPosition() {
     const { direction, move } = useCharacterStore(
         useShallow((state) => ({
+            isScrolling: state.isScrolling,
             direction: state.direction,
             move: state.move,
         }))
@@ -20,7 +21,8 @@ export function useCharacterPosition() {
 
     const animate = useCallback((time: number) => {
         if (lastTimeRef.current != null) {
-            const delta = (time - lastTimeRef.current) / 1000;
+            let delta = (time - lastTimeRef.current) / 1000;
+            delta = Math.min(delta, 0.05)
 
             // Vector de movimiento según la dirección
             const [vx, vy] = directionVectors[direction];

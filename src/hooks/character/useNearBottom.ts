@@ -7,14 +7,14 @@ const SCROLL_STEP = 2;
 
 export const useNearBottom = () => {
     const threshold = 50;
-    const { y, setIsScrolling } = useCharacterStore(
+    const { y, setIsScrolling, setY } = useCharacterStore(
         useShallow((state) => ({
             y: state.y,
             setIsScrolling: state.setIsScrolling,
+            setY: state.setY,
         }))
     );
 
-    const setY = useCharacterStore((state) => state.setY);
     const [isNearBottom, setIsNearBottom] = useState(false);
 
     useEffect(() => {
@@ -25,11 +25,12 @@ export const useNearBottom = () => {
                 setIsScrolling(true);
             } else {
                 setIsNearBottom(false);
+                setIsScrolling(false);
             }
         };
 
         handleCheck();
-    }, [y, setIsScrolling]);
+    }, [y, setIsScrolling, setY]);
 
     useEffect(() => {
         if (!isNearBottom) return;
