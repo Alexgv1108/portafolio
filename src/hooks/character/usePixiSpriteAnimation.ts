@@ -2,7 +2,7 @@
 import { Assets } from 'pixi.js';
 import { Direction } from '../../models/character/enums/Direction';
 import type { UsePixiSpriteAnimationProps } from '../../models/character/interfaces/UsePixiSpriteAnimationProps';
-import { CHARACTER_HEIGHT, CHARACTER_WIDTH } from '../../constants/characterDimensions';
+import { getCharacterDimensions } from '../../constants/characterDimensions';
 
 export function usePixiSpriteAnimation({ app, assetsLoaded, characterRef }: UsePixiSpriteAnimationProps) {
     // Función para cambiar sprite según dirección y movimiento
@@ -85,19 +85,19 @@ export function usePixiSpriteAnimation({ app, assetsLoaded, characterRef }: UseP
             newCharacter.x = x;
             newCharacter.y = y;
             
-            // Configurar tamaño
-            try {
-                newCharacter.width = CHARACTER_WIDTH;
-                newCharacter.height = CHARACTER_HEIGHT;
-            } catch {
-                // Si width/height fallan, usar scale
-                try {
-                    const scaleX = CHARACTER_WIDTH / (newCharacter.texture?.width || CHARACTER_WIDTH);
-                    const scaleY = CHARACTER_HEIGHT / (newCharacter.texture?.height || CHARACTER_HEIGHT);
-                    newCharacter.scale.set(scaleX, scaleY);
-                } catch {
-                    // Could not set scale for GIF
-                }
+            // Configurar tamaño con escalado suave
+            const dimensions = getCharacterDimensions();
+            const scaleX = dimensions.width / (newCharacter.texture?.width || dimensions.width);
+            const scaleY = dimensions.height / (newCharacter.texture?.height || dimensions.height);
+            
+            // Usar el menor factor de escala para mantener las proporciones y calidad
+            const scale = Math.min(scaleX, scaleY);
+            newCharacter.scale.set(scale, scale);
+            
+            // Aplicar filtro LINEAR para imágenes normales (renderizado suave)
+            if (newCharacter.texture && newCharacter.texture.baseTexture) {
+                // En versiones nuevas de PixiJS, usar 'linear' directamente
+                newCharacter.texture.baseTexture.scaleMode = 'linear';
             }
         } catch (e) {
             console.error('Error configuring GIF properties:', e);

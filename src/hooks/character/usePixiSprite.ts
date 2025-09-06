@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { Assets } from 'pixi.js';
 import type { UsePixiSpriteProps } from '../../models/character/interfaces/UsePixiSpriteProps';
-import { CHARACTER_HEIGHT, CHARACTER_WIDTH } from '../../constants/characterDimensions';
+import { getCharacterDimensions } from '../../constants/characterDimensions';
 
 export function usePixiSprite({ app, assetsLoaded }: UsePixiSpriteProps) {
     const characterRef = useRef<unknown>(null);
@@ -25,20 +25,19 @@ export function usePixiSprite({ app, assetsLoaded }: UsePixiSpriteProps) {
             // No anchor available for this GIF
         }
         
-        // Configurar tamaño y posición
-        try {
-            idleGif.width = CHARACTER_WIDTH;
-            idleGif.height = CHARACTER_HEIGHT;
-        } catch {
-            // Si width/height fallan, usar scale
-            try {
-                const scaleX = CHARACTER_WIDTH / (idleGif.texture?.width || CHARACTER_WIDTH);
-                const scaleY = CHARACTER_HEIGHT / (idleGif.texture?.height || CHARACTER_HEIGHT);
-                idleGif.scale.set(scaleX, scaleY);
-            } catch (e) {
-                // Could not set scale for GIF
-                console.error(e);
-            }
+        // Configurar tamaño y posición con escalado suave
+        const dimensions = getCharacterDimensions();
+        const scaleX = dimensions.width / (idleGif.texture?.width || dimensions.width);
+        const scaleY = dimensions.height / (idleGif.texture?.height || dimensions.height);
+        
+        // Usar el menor factor de escala para mantener las proporciones y calidad
+        const scale = Math.min(scaleX, scaleY);
+        idleGif.scale.set(scale, scale);
+        
+        // Aplicar filtro LINEAR para imágenes normales (renderizado suave)
+        if (idleGif.texture && idleGif.texture.baseTexture) {
+            // En versiones nuevas de PixiJS, usar 'linear' directamente
+            idleGif.texture.baseTexture.scaleMode = 'linear';
         }
         
         idleGif.x = window.innerWidth / 2;

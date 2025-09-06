@@ -5,6 +5,8 @@ import { keyToDirection } from '../../constants/keyToDirection';
 import { useKeyboardStore } from '../stores/useKeyboardStore';
 import { useShallow } from 'zustand/shallow';
 import type { UsePixiMovementProps } from '../../models/character/interfaces/UsePixiMovementProps';
+import { usePixiAutoScroll } from './usePixiAutoScroll';
+import { getAutoScrollConfig } from '../../constants/autoScrollConfig';
 
 const SPEED = 300; // píxeles por segundo
 
@@ -23,6 +25,9 @@ export function usePixiMovement({
     const lastDirectionRef = useRef<Direction>(Direction.Idle);
     const animationRef = useRef<number | null>(null);
     const lastTimeRef = useRef<number>(0);
+
+    // Hook para auto-scroll
+    const { checkAndScroll } = usePixiAutoScroll({ getPosition, moveCharacter });
 
     // Loop de animación para movimiento suave
     const animate = useCallback((currentTime: number) => {
@@ -76,16 +81,23 @@ export function usePixiMovement({
                 const newX = currentPos.x + (vx / length) * SPEED * deltaSeconds;
                 const newY = currentPos.y + (vy / length) * SPEED * deltaSeconds;
 
+                // Obtener límites dinámicos
+                const config = getAutoScrollConfig();
+                
                 // Aplicar límites de pantalla
-                const boundedX = Math.max(32, Math.min(newX, window.innerWidth - 32));
-                const boundedY = Math.max(32, Math.min(newY, window.innerHeight - 32));
+                const boundedX = Math.max(config.boundaryHorizontal, Math.min(newX, window.innerWidth - config.boundaryHorizontal));
+                // Límites verticales respetando las dimensiones del personaje
+                const boundedY = Math.max(config.boundaryVertical, Math.min(newY, window.innerHeight - config.boundaryVertical));
 
                 moveCharacter(boundedX, boundedY);
+                
+                // Verificar si necesitamos hacer scroll automático
+                checkAndScroll();
             }
         }
 
         animationRef.current = requestAnimationFrame(animate);
-    }, [character, setDirection, getPosition, moveCharacter, pressedKeys]);
+    }, [character, setDirection, getPosition, moveCharacter, pressedKeys, checkAndScroll]);
 
     // Iniciar loop de animación
     useEffect(() => {

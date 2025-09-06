@@ -16,9 +16,7 @@ export function usePixiApp() {
                 width: window.innerWidth,
                 height: window.innerHeight,
                 backgroundAlpha: 0, // Fondo transparente
-                antialias: false, // Para sprites pixel art
-                resolution: window.devicePixelRatio || 1,
-                autoDensity: true,
+                resolution: window.devicePixelRatio || 1
             });
 
             // Habilitar renderizado automático
@@ -37,7 +35,7 @@ export function usePixiApp() {
             
             app.ticker.add(renderLoop);
 
-            // Configurar el canvas
+            // Configurar el canvas para renderizado suave
             app.canvas.style.position = 'fixed';
             app.canvas.style.top = '0';
             app.canvas.style.left = '0';
@@ -45,6 +43,7 @@ export function usePixiApp() {
             app.canvas.style.height = '100vh';
             app.canvas.style.pointerEvents = 'none';
             app.canvas.style.zIndex = '9999';
+            app.canvas.style.imageRendering = 'auto'; // Renderizado suave para imágenes normales
 
             // Agregar al DOM
             if (containerRef.current) {
