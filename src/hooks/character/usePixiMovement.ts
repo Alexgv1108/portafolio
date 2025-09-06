@@ -5,7 +5,7 @@ import { keyToDirection } from '../../constants/keyToDirection';
 import { useKeyboardStore } from '../stores/useKeyboardStore';
 import { useShallow } from 'zustand/shallow';
 import type { UsePixiMovementProps } from '../../models/character/interfaces/UsePixiMovementProps';
-import { usePixiAutoScroll } from './usePixiAutoScroll';
+import { usePixiAutoScroll } from '../scroll/usePixiAutoScroll';
 import { getAutoScrollConfig } from '../../constants/autoScrollConfig';
 
 const SPEED = 300; // píxeles por segundo

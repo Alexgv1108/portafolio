@@ -2,6 +2,29 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Permitir scroll programático pero ocultar scrollbars */
+html {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -ms-overflow-style: none;  /* IE y Edge */
+    scrollbar-width: none;     /* Firefox */
+    overscroll-behavior: none;
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+html::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    background: transparent;
+}
+
+body {
+    overflow-y: visible;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
 @layer components {
     .bg-gradient-title {
         @apply bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent font-extrabold;

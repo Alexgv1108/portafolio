@@ -7,6 +7,7 @@ import {
     AUTO_SCROLL_REPOSITION_OFFSET,
     getAutoScrollConfig
 } from '../../constants/autoScrollConfig';
+import { useDisableScroll } from './useDisableScroll';
 
 export function usePixiAutoScroll({ 
     getPosition, 
@@ -16,6 +17,9 @@ export function usePixiAutoScroll({
 }: UsePixiAutoScrollProps) {
     const lastScrollTimeRef = useRef<number>(0);
     const scrollCooldownMs = AUTO_SCROLL_COOLDOWN;
+
+    // Deshabilitar scroll manual usando hook personalizado
+    useDisableScroll();
 
     const checkAndScroll = useCallback(() => {
         const currentTime = Date.now();
@@ -38,6 +42,8 @@ export function usePixiAutoScroll({
         if (!isAtBottom && position.y > windowHeight - threshold) {
             lastScrollTimeRef.current = currentTime;
             
+            console.log('Auto-scroll hacia abajo activado', { position, threshold, windowHeight });
+            
             // Scroll hacia abajo
             const scrollAmount = windowHeight * (scrollDistance / 100);
             window.scrollBy({
@@ -54,6 +60,8 @@ export function usePixiAutoScroll({
         // Verificar si el personaje está cerca del top y no estamos en el top de la página
         else if (position.y < threshold && !isAtTop) {
             lastScrollTimeRef.current = currentTime;
+            
+            console.log('Auto-scroll hacia arriba activado', { position, threshold, isAtTop });
             
             // Scroll hacia arriba
             const scrollAmount = windowHeight * (scrollDistance / 100);

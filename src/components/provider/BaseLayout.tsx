@@ -11,7 +11,7 @@ const BaseLayout = ({ children }: { children: ReactNode }) => {
             <Background />
             <WASDControls />
             <LightAndDarkMode />
-            <div className="relative w-full min-h-screen block justify-center overflow-hidden pt-10">
+            <div className="relative w-full min-h-screen block justify-center pt-10">
                 {children}
             </div>
             <Footer />
