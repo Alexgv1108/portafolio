@@ -1,4 +1,4 @@
-import { Direction } from "../models/enums/Direction";
+import { Direction } from "../models/character/enums/Direction";
 
 export const keyToDirection: Record<string, Direction> = {
     w: Direction.Up,

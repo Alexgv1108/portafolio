@@ -1,11 +1,11 @@
 import BaseLayout from "./components/provider/BaseLayout";
 import { useToggleTheme } from "./hooks/style/useToggleTheme";
-import { useGameLoop } from "./hooks/useGameLoop";
+import { usePixiGame } from "./hooks/screen/usePixiGame";
 import { AppRouter } from "./router/AppRouter";
 
 export const App = () => {
 
-    useGameLoop();
+    usePixiGame();
     useToggleTheme();
 
     return (

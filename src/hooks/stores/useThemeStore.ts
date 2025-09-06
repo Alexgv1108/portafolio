@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import type { ThemeState } from "../../models/interfaces/ThemeState";
+import type { ThemeState } from "../../models/theme/interfaces/ThemeState";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { Theme } from "../../models/enums/Theme";
+import { Theme } from "../../models/theme/enums/Theme";
 
 export const useThemeStore = create<ThemeState>()(
     persist(
