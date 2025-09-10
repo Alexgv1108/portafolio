@@ -73,8 +73,13 @@ export function usePixiSpriteAnimation({ app, assetsLoaded }: { app: any; assets
         }
 
         try {
-            // Para GIFs animados, necesitamos manejar esto diferente
-            if (newTexture.constructor.name === '_AnimatedGIF') {
+            // Detección más robusta para GIFs animados (funciona en dev y build)
+            const isAnimatedGIF = newTexture.constructor.name === '_AnimatedGIF' || 
+                                  newTexture._isAnimatedGIF || 
+                                  (newTexture.textures && Array.isArray(newTexture.textures)) ||
+                                  textureKey.includes('character-'); // Fallback para nuestros assets
+            
+            if (isAnimatedGIF) {
                 // Los GIFs animados tienen diferente estructura, no validar baseTexture
                 if (!newTexture.width || !newTexture.height) {
                     console.warn(`⚠️ Invalid GIF dimensions for: ${textureKey}`, newTexture);
