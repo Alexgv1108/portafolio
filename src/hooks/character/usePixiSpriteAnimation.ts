@@ -66,21 +66,20 @@ export function usePixiSpriteAnimation({ app, assetsLoaded }: { app: any; assets
             return;
         }
 
-        // Verificar que la textura sea válida
-        if (!newTexture.width || !newTexture.height) {
-            console.warn(`⚠️ Invalid texture dimensions for: ${textureKey}`, newTexture);
-            return;
-        }
-
-        // Verificar adicional para texturas con baseTexture
-        if (newTexture.baseTexture && !newTexture.baseTexture.valid) {
-            console.warn(`⚠️ BaseTexture not ready for: ${textureKey}`);
+        // Verificación básica de que tenemos algo válido
+        if (typeof newTexture !== 'object') {
+            console.warn(`⚠️ Invalid texture type for: ${textureKey}`);
             return;
         }
 
         try {
             // Para GIFs animados, necesitamos manejar esto diferente
             if (newTexture.constructor.name === '_AnimatedGIF') {
+                // Los GIFs animados tienen diferente estructura, no validar baseTexture
+                if (!newTexture.width || !newTexture.height) {
+                    console.warn(`⚠️ Invalid GIF dimensions for: ${textureKey}`, newTexture);
+                    return;
+                }
                 
                 // Guardar posición actual con validaciones
                 const currentX = currentChar.x || 0;
@@ -125,14 +124,19 @@ export function usePixiSpriteAnimation({ app, assetsLoaded }: { app: any; assets
                 setCharacterRef(newSprite);
                 
             } else {
-                // Para texturas normales, validar más profundamente antes de asignar
+                // Para texturas normales, validar dimensiones y baseTexture
+                if (!newTexture.width || !newTexture.height) {
+                    console.warn(`⚠️ Invalid texture dimensions for: ${textureKey}`, newTexture);
+                    return;
+                }
+                
+                // Verificar baseTexture solo para texturas normales
+                if (!newTexture.baseTexture || !newTexture.baseTexture.valid) {
+                    console.warn(`⚠️ BaseTexture not ready for: ${textureKey}`);
+                    return;
+                }
+                
                 try {
-                    // Verificar que la textura tenga todas las propiedades necesarias
-                    if (!newTexture.baseTexture || !newTexture.baseTexture.valid) {
-                        console.warn(`⚠️ Invalid baseTexture for: ${textureKey}`);
-                        return;
-                    }
-                    
                     // Verificar que currentChar tenga la capacidad de recibir textures
                     if (!currentChar || typeof currentChar.texture === 'undefined') {
                         console.warn(`⚠️ Character sprite cannot receive textures`);
