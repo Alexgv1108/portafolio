@@ -72,6 +72,12 @@ export function usePixiSpriteAnimation({ app, assetsLoaded }: { app: any; assets
             return;
         }
 
+        // Verificar adicional para texturas con baseTexture
+        if (newTexture.baseTexture && !newTexture.baseTexture.valid) {
+            console.warn(`⚠️ BaseTexture not ready for: ${textureKey}`);
+            return;
+        }
+
         try {
             // Para GIFs animados, necesitamos manejar esto diferente
             if (newTexture.constructor.name === '_AnimatedGIF') {
@@ -119,8 +125,20 @@ export function usePixiSpriteAnimation({ app, assetsLoaded }: { app: any; assets
                 setCharacterRef(newSprite);
                 
             } else {
-                // Para texturas normales, cambiar solo la textura
+                // Para texturas normales, validar más profundamente antes de asignar
                 try {
+                    // Verificar que la textura tenga todas las propiedades necesarias
+                    if (!newTexture.baseTexture || !newTexture.baseTexture.valid) {
+                        console.warn(`⚠️ Invalid baseTexture for: ${textureKey}`);
+                        return;
+                    }
+                    
+                    // Verificar que currentChar tenga la capacidad de recibir textures
+                    if (!currentChar || typeof currentChar.texture === 'undefined') {
+                        console.warn(`⚠️ Character sprite cannot receive textures`);
+                        return;
+                    }
+                    
                     currentChar.texture = newTexture;
                     currentChar._textureKey = textureKey;
                 } catch (textureError) {
