@@ -82,13 +82,24 @@ export function usePixiSpriteAnimation({ app, assetsLoaded }: { app: any; assets
                 
                 // El newTexture ya es un sprite para GIFs animados
                 const newSprite = newTexture;
-                
-                // Restaurar propiedades
-                newSprite.x = currentX;
-                newSprite.y = currentY;
-                newSprite.scale.set(currentScale.x, currentScale.y);
-                newSprite.anchor.set(currentAnchor.x, currentAnchor.y);
-                newSprite._textureKey = textureKey;
+                try {
+                    newSprite.x = currentX;
+                    newSprite.y = currentY;
+                    if (newSprite.scale) {
+                        newSprite.scale.x = currentScale.x;
+                        newSprite.scale.y = currentScale.y;
+                    }
+                    if (newSprite.anchor) {
+                        newSprite.anchor.x = currentAnchor.x;
+                        newSprite.anchor.y = currentAnchor.y;
+                    }
+                    newSprite._textureKey = textureKey;
+                } catch (propertyError) {
+                    console.warn('⚠️ Error setting sprite properties:', propertyError);
+                    newSprite.x = currentX;
+                    newSprite.y = currentY;
+                    newSprite._textureKey = textureKey;
+                }
                 
                 // Agregar al stage
                 app.stage.addChild(newSprite);
