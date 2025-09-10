@@ -62,6 +62,13 @@ export function usePixiSpriteAnimation({ app, assetsLoaded }: { app: any; assets
         const newTexture = Assets.get(textureKey);
         
         if (!newTexture) {
+            console.warn(`⚠️ Texture not found: ${textureKey}`);
+            return;
+        }
+
+        // Verificar que la textura sea válida
+        if (!newTexture.width || !newTexture.height) {
+            console.warn(`⚠️ Invalid texture dimensions for: ${textureKey}`, newTexture);
             return;
         }
 
@@ -69,11 +76,15 @@ export function usePixiSpriteAnimation({ app, assetsLoaded }: { app: any; assets
             // Para GIFs animados, necesitamos manejar esto diferente
             if (newTexture.constructor.name === '_AnimatedGIF') {
                 
-                // Guardar posición actual
-                const currentX = currentChar.x;
-                const currentY = currentChar.y;
-                const currentScale = { x: currentChar.scale.x, y: currentChar.scale.y };
-                const currentAnchor = { x: currentChar.anchor.x, y: currentChar.anchor.y };
+                // Guardar posición actual con validaciones
+                const currentX = currentChar.x || 0;
+                const currentY = currentChar.y || 0;
+                const currentScale = currentChar.scale ? 
+                    { x: currentChar.scale.x || 1, y: currentChar.scale.y || 1 } : 
+                    { x: 1, y: 1 };
+                const currentAnchor = currentChar.anchor ? 
+                    { x: currentChar.anchor.x || 0.5, y: currentChar.anchor.y || 0.5 } : 
+                    { x: 0.5, y: 0.5 };
                 
                 // Remover el sprite actual
                 if (currentChar.parent) {
@@ -109,8 +120,13 @@ export function usePixiSpriteAnimation({ app, assetsLoaded }: { app: any; assets
                 
             } else {
                 // Para texturas normales, cambiar solo la textura
-                currentChar.texture = newTexture;
-                currentChar._textureKey = textureKey;
+                try {
+                    currentChar.texture = newTexture;
+                    currentChar._textureKey = textureKey;
+                } catch (textureError) {
+                    console.warn('⚠️ Error setting texture:', textureError);
+                    return;
+                }
             }
         } catch (error) {
             console.error('❌ Error updating texture:', error);
