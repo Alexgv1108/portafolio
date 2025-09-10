@@ -1,42 +1,47 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { useShallow } from 'zustand/shallow';
 import { Direction } from '../../models/character/enums/Direction';
 import type { UsePixiCharacterProps } from '../../models/character/interfaces/UsePixiCharacterProps';
+import { useCharacterStore } from '../../stores/useCharacterStore';
 import { usePixiAssets } from '../assets/usePixiAssets';
 import { usePixiSprite } from './usePixiSprite';
 import { usePixiSpriteAnimation } from './usePixiSpriteAnimation';
-import { usePixiCharacterPosition } from './usePixiCharacterPosition';
 
 export function usePixiCharacter({ app, isReady }: UsePixiCharacterProps) {
-    const [isMoving, setIsMoving] = useState(false);
+    const { direction, setDirection } = useCharacterStore(
+        useShallow((state) => ({
+            direction: state.direction,
+            setDirection: state.setDirection,
+        }))
+    );
 
     // Cargar assets
     const { assetsLoaded } = usePixiAssets({ isReady });
     
     // Crear sprite inicial
-    const { characterRef } = usePixiSprite({ app, assetsLoaded });
+    usePixiSprite({ app, assetsLoaded });
     
     // Animaciones de sprite
     const { updateCharacterSprite } = usePixiSpriteAnimation({ 
         app, 
-        assetsLoaded, 
-        characterRef 
+        assetsLoaded 
     });
-    
-    // Posición y movimiento
-    const { moveCharacter, getPosition } = usePixiCharacterPosition({ characterRef });
 
-    const setDirection = (direction: Direction) => {
-        const moving = direction !== Direction.Idle;
-        setIsMoving(moving);
-        updateCharacterSprite(direction, moving);
+    // Escuchar cambios de dirección del store y actualizar sprite
+    useEffect(() => {
+        if (assetsLoaded) {
+            const moving = direction !== Direction.Idle;
+            updateCharacterSprite(direction, moving);
+        }
+    }, [direction, assetsLoaded, updateCharacterSprite]);
+
+    const handleSetDirection = (newDirection: Direction) => {
+        setDirection(newDirection);
+        const moving = newDirection !== Direction.Idle;
+        updateCharacterSprite(newDirection, moving);
     };
 
     return {
-        character: characterRef.current,
-        assetsLoaded,
-        isMoving,
-        moveCharacter,
-        setDirection,
-        getPosition,
+        setDirection: handleSetDirection,
     };
 }

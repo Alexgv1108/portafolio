@@ -11,29 +11,16 @@ export function usePixiGame() {
     useKeyboardListener();
     
     // Crear y manejar personaje
-    const {
-        character,
-        assetsLoaded,
-        isMoving,
-        moveCharacter,
-        setDirection,
-        getPosition,
-    } = usePixiCharacter({ app, isReady });
+    const { setDirection } = usePixiCharacter({ app, isReady });
     
     // Manejar movimiento
-    const { currentDirection: movementDirection } = usePixiMovement({
-        character,
-        setDirection,
-        moveCharacter,
-        getPosition,
-    });
+    const { currentDirection: movementDirection } = usePixiMovement();
 
     return {
         app,
-        character,
-        isReady: isReady && assetsLoaded,
+        isReady,
         currentDirection: movementDirection,
-        isMoving,
         containerRef,
+        setDirection,
     };
 }

@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useShallow } from "zustand/shallow";
-import { useKeyboardStore } from "../stores/useKeyboardStore";
+import { useKeyboardStore } from "../../stores/useKeyboardStore";
 
 export function useKeyboardListener() {
     const { onKeyDown, onKeyUp } = useKeyboardStore(

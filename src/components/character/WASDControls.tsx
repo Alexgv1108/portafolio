@@ -1,5 +1,5 @@
 import { useShallow } from "zustand/shallow";
-import { useKeyboardStore } from "../../hooks/stores/useKeyboardStore";
+import { useKeyboardStore } from "../../stores/useKeyboardStore";
 
 export const WASDControls = () => {
     const { pressedKeys, pressVirtualKey, releaseVirtualKey } = useKeyboardStore(

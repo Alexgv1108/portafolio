@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Assets } from 'pixi.js';
 import type { UsePixiAssetsProps } from '../../models/assets/interfaces/UsePixiAssetsProps';
+import { useCharacterStore } from '../../stores/useCharacterStore';
 
 // Importar el parser de GIFs
 import '@pixi/gif';
@@ -13,6 +14,7 @@ import characterImgLeft from '../../assets/character-left.gif';
 
 export function usePixiAssets({ isReady }: UsePixiAssetsProps) {
     const [assetsLoaded, setAssetsLoaded] = useState(false);
+    const { setAssetsLoaded: setAssetsLoadedInStore } = useCharacterStore();
 
     useEffect(() => {
         if (!isReady) return;
@@ -28,13 +30,14 @@ export function usePixiAssets({ isReady }: UsePixiAssetsProps) {
                 ]);
                 
                 setAssetsLoaded(true);
+                setAssetsLoadedInStore(true);
             } catch (error) {
-                console.error('Error loading GIF assets:', error);
+                console.error('❌ Error loading GIF assets:', error);
             }
         };
 
         loadAssets();
-    }, [isReady]);
+    }, [isReady, setAssetsLoadedInStore]);
 
     return { assetsLoaded };
 }

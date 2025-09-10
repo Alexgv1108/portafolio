@@ -42,8 +42,6 @@ export function usePixiAutoScroll({
         if (!isAtBottom && position.y > windowHeight - threshold) {
             lastScrollTimeRef.current = currentTime;
             
-            console.log('Auto-scroll hacia abajo activado', { position, threshold, windowHeight });
-            
             // Scroll hacia abajo
             const scrollAmount = windowHeight * (scrollDistance / 100);
             window.scrollBy({
@@ -60,8 +58,6 @@ export function usePixiAutoScroll({
         // Verificar si el personaje está cerca del top y no estamos en el top de la página
         else if (position.y < threshold && !isAtTop) {
             lastScrollTimeRef.current = currentTime;
-            
-            console.log('Auto-scroll hacia arriba activado', { position, threshold, isAtTop });
             
             // Scroll hacia arriba
             const scrollAmount = windowHeight * (scrollDistance / 100);

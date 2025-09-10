@@ -1,17 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useRef } from 'react';
-import { Assets } from 'pixi.js';
+import { useEffect } from 'react';
+import { useShallow } from 'zustand/shallow';
+import { Assets, Sprite } from 'pixi.js';
 import type { UsePixiSpriteProps } from '../../models/character/interfaces/UsePixiSpriteProps';
 import { getCharacterDimensions } from '../../constants/characterDimensions';
+import { useCharacterStore } from '../../stores/useCharacterStore';
 
 export function usePixiSprite({ app, assetsLoaded }: UsePixiSpriteProps) {
-    const characterRef = useRef<unknown>(null);
+    const { setCharacterRef, setPosition } = useCharacterStore(
+        useShallow((state) => ({
+            setCharacterRef: state.setCharacterRef,
+            setPosition: state.setPosition,
+        }))
+    );
 
     useEffect(() => {
         if (!app || !assetsLoaded) return;
 
         // Crear sprite inicial (quieto) - ahora es un GIF
-        const idleGif = Assets.get('character-idle') as any;
+        const idleTexture = Assets.get('character-idle');
+        if (!idleTexture) {
+            return;
+        }
+        
+        const idleGif = new Sprite(idleTexture) as any;
         
         // Configurar GIF con proporciones correctas
         try {
@@ -35,27 +47,31 @@ export function usePixiSprite({ app, assetsLoaded }: UsePixiSpriteProps) {
         idleGif.scale.set(scale, scale);
         
         // Aplicar filtro LINEAR para imágenes normales (renderizado suave)
-        if (idleGif.texture && idleGif.texture.baseTexture) {
-            // En versiones nuevas de PixiJS, usar 'linear' directamente
-            idleGif.texture.baseTexture.scaleMode = 'linear';
+        if (idleGif?.texture?.source) {
+            idleGif.texture.source.scaleMode = 'linear';
         }
         
-        idleGif.x = window.innerWidth / 2;
-        idleGif.y = window.innerHeight / 2;
+        const initialX = window.innerWidth / 2;
+        const initialY = window.innerHeight / 2;
+        
+        idleGif.x = initialX;
+        idleGif.y = initialY;
         
         // Marcar el sprite inicial con su textureKey
         idleGif._textureKey = 'character-idle';
 
         // Agregar al stage
         app.stage.addChild(idleGif);
-        characterRef.current = idleGif;
+        
+        // Actualizar el store con el personaje y su posición
+        setCharacterRef(idleGif);
+        setPosition(initialX, initialY);
 
         return () => {
             if (idleGif.parent) {
                 idleGif.parent.removeChild(idleGif);
             }
         };
-    }, [app, assetsLoaded]);
+    }, [app, assetsLoaded, setCharacterRef, setPosition]);
 
-    return { characterRef };
 }
