@@ -60,7 +60,7 @@ export const WASDControls = () => {
     return (
         <div className={`fixed z-10 select-none transition-all duration-300 ${
             isMobile 
-                ? 'bottom-6 right-4 opacity-90 hover:opacity-100' 
+                ? 'bottom-20 right-4 opacity-90 hover:opacity-100'
                 : 'top-4 left-4'
         }`}>
             <div className={`p-4 rounded-2xl backdrop-blur-lg border shadow-xl ${

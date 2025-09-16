@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Background } from "../common/Background";
 import { WASDControls } from '../character/WASDControls';
 import { LightAndDarkMode } from "../button/LightAndDarkMode";
+import { ScrollToTopButton } from "../common/ScrollToTopButton";
 import { Footer } from '../landing/Footer';
 import { usePixiGame } from '../../hooks/screen/usePixiGame';
 import { useToggleTheme } from "../../hooks/style/useToggleTheme";
@@ -26,6 +27,7 @@ const BaseLayout = ({ children }: { children: ReactNode }) => {
                 className="fixed inset-0 pointer-events-none z-50"
             />
             <WASDControls />
+            <ScrollToTopButton />
             <LightAndDarkMode />
             <div className='flex flex-col h-full min-h-screen gap-4'>
                 {children}
