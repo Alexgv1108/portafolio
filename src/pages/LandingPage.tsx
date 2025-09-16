@@ -1,4 +1,5 @@
 import { AboutMe } from "../components/landing/AboutMe"
+import { Skills } from "../components/landing/Skills"
 import { Main } from "../components/landing/Main"
 
 export const LandingPage = () => {
@@ -7,6 +8,7 @@ export const LandingPage = () => {
         <>
             <Main />
             <AboutMe />
+            <Skills />
         </>
     )
 }
