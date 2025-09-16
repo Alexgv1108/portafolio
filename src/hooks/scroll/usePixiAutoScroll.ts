@@ -8,6 +8,7 @@ import {
 } from '../../constants/autoScrollConfig';
 import { useDisableScroll } from './useDisableScroll';
 import { useCharacterStore } from '../stores/useCharacterStore';
+import { playPixiSound } from '../../utils/audioUtils';
 
 export function usePixiAutoScroll({ 
     getPosition, 
@@ -69,6 +70,9 @@ export function usePixiAutoScroll({
             // Bloquear movimiento del personaje
             setIsScrolling(true);
             
+            // Reproducir sonido de moneda al hacer scroll
+            playPixiSound(0.3);
+            
             // Scroll más suave en móviles
             const scrollAmount = windowHeight * (scrollDistance / (isMobile ? 150 : 100));
             
@@ -94,6 +98,9 @@ export function usePixiAutoScroll({
             // Bloquear movimiento del personaje
             setIsScrolling(true);
             
+            // Reproducir sonido de moneda al hacer scroll
+            playPixiSound(0.3);
+
             // Scroll más suave en móviles
             const scrollAmount = windowHeight * (scrollDistance / (isMobile ? 150 : 100));
             

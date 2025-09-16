@@ -5,6 +5,7 @@
       "name": "portafolio",
       "dependencies": {
         "@pixi/gif": "^3.0.1",
+        "@pixi/sound": "^6.0.1",
         "@tailwindcss/postcss": "^4.1.12",
         "@tailwindcss/vite": "^4.1.12",
         "lucide-react": "^0.542.0",
@@ -133,6 +134,8 @@
     "@pixi/colord": ["@pixi/colord@2.9.6", "", {}, "sha512-nezytU2pw587fQstUu1AsJZDVEynjskwOL+kibwcdxsMBFqPsFFNA7xl0ii/gXuDi6M0xj3mfRJj8pBSc2jCfA=="],
 
     "@pixi/gif": ["@pixi/gif@3.0.1", "", { "peerDependencies": { "pixi.js": "^8.0.0" } }, "sha512-oGl0nkbFAe1vaRLyIvGbJc3fcIrS8vF1E00cwjiV+9f1pYe072D+yijJxHsgYnXs6jdzERh+D0MqSrEag0jRzg=="],
+
+    "@pixi/sound": ["@pixi/sound@6.0.1", "", { "peerDependencies": { "pixi.js": "^8.0.0" } }, "sha512-hpFlQSScAR2L/CsEoIvDi7s1oGsu8y9Zd742Vd3982N+q3IF2vFuIfV9HN4ryjlGnhCT8yBlEgs1gp4G9Rt9TA=="],
 
     "@rolldown/pluginutils": ["@rolldown/pluginutils@1.0.0-beta.32", "", {}, "sha512-QReCdvxiUZAPkvp1xpAg62IeNzykOFA6syH2CnClif4YmALN1XKpB39XneL80008UbtMShthSVDKmrx05N1q/g=="],
 
