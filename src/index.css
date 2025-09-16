@@ -9,6 +9,9 @@ html {
     -ms-overflow-style: none;  /* IE y Edge */
     scrollbar-width: none;     /* Firefox */
     overscroll-behavior: none;
+    scroll-behavior: smooth;
+    /* Asegurar que la página siempre inicie en el top */
+    scroll-restoration: manual;
 }
 
 /* Webkit browsers (Chrome, Safari, Edge) */
@@ -23,6 +26,15 @@ body {
     overflow-x: hidden;
     margin: 0;
     padding: 0;
+}
+
+/* Forzar scroll al inicio en cada carga de página */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    scroll-behavior: smooth;
 }
 
 @layer components {
@@ -98,4 +110,31 @@ body {
 
 .animate-fade-in {
     animation: fade-in 0.3s ease-out;
+}
+
+/* Animaciones para el loader del personaje */
+@keyframes spin-reverse {
+    from {
+        transform: rotate(360deg);
+    }
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+.animate-reverse {
+    animation: spin-reverse 1s linear infinite;
+}
+
+@keyframes pulse-progress {
+    0%, 100% {
+        transform: translateX(-100%);
+    }
+    50% {
+        transform: translateX(100%);
+    }
+}
+
+.animate-pulse-progress {
+    animation: pulse-progress 2s ease-in-out infinite;
 }

@@ -18,14 +18,20 @@ export const ScrollToTopButton = () => {
 
     useEffect(() => {
         const toggleVisibility = () => {
-            // Mostrar el botón cuando se haya scrolleado más de 100vh
-            if (window.scrollY > window.innerHeight) {
+            // Mostrar el botón cuando se haya scrolleado exactamente 100vh
+            const scrolledDistance = window.scrollY;
+            const viewportHeight = window.innerHeight;
+            
+            if (scrolledDistance >= viewportHeight) {
                 setIsVisible(true);
             } else {
                 setIsVisible(false);
             }
         };
 
+        // Verificar visibilidad inicial
+        toggleVisibility();
+        
         window.addEventListener('scroll', toggleVisibility);
         
         return () => window.removeEventListener('scroll', toggleVisibility);
