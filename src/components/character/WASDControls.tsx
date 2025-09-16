@@ -43,6 +43,19 @@ export const WASDControls = () => {
     `;
     };
 
+    // Handlers mejorados para controles virtuales
+    const handleVirtualKeyDown = (key: string) => {
+        const lowerKey = key.toLowerCase();
+        if (!pressedKeys.has(lowerKey)) {
+            pressVirtualKey(lowerKey);
+        }
+    };
+
+    const handleVirtualKeyUp = (key: string) => {
+        const lowerKey = key.toLowerCase();
+        releaseVirtualKey(lowerKey);
+    };
+
     return (
         <div className={`fixed z-50 select-none ${
             isMobile 
@@ -54,11 +67,11 @@ export const WASDControls = () => {
                 <div className="flex justify-center">
                     <div 
                         className={getKeyStyles('W')}
-                        onMouseDown={() => pressVirtualKey('w')}
-                        onMouseUp={() => releaseVirtualKey('w')}
-                        onMouseLeave={() => releaseVirtualKey('w')}
-                        onTouchStart={() => pressVirtualKey('w')}
-                        onTouchEnd={() => releaseVirtualKey('w')}
+                        onMouseDown={() => handleVirtualKeyDown('w')}
+                        onMouseUp={() => handleVirtualKeyUp('w')}
+                        onMouseLeave={() => handleVirtualKeyUp('w')}
+                        onTouchStart={() => handleVirtualKeyDown('w')}
+                        onTouchEnd={() => handleVirtualKeyUp('w')}
                     >
                         W
                     </div>
@@ -70,11 +83,11 @@ export const WASDControls = () => {
                         <div
                             key={key}
                             className={getKeyStyles(key)}
-                            onMouseDown={() => pressVirtualKey(key.toLowerCase())}
-                            onMouseUp={() => releaseVirtualKey(key.toLowerCase())}
-                            onMouseLeave={() => releaseVirtualKey(key.toLowerCase())}
-                            onTouchStart={() => pressVirtualKey(key.toLowerCase())}
-                            onTouchEnd={() => releaseVirtualKey(key.toLowerCase())}
+                            onMouseDown={() => handleVirtualKeyDown(key)}
+                            onMouseUp={() => handleVirtualKeyUp(key)}
+                            onMouseLeave={() => handleVirtualKeyUp(key)}
+                            onTouchStart={() => handleVirtualKeyDown(key)}
+                            onTouchEnd={() => handleVirtualKeyUp(key)}
                         >
                             {key}
                         </div>

@@ -10,44 +10,53 @@ export const useKeyboardStore = create<KeyboardState>((set, get) => ({
     },
 
     onKeyDown: (key: string) => {
+        const normalizedKey = key.toLowerCase();
         set((state: KeyboardState) => {
-            if (state.pressedKeys.has(key)) {
-                return { lastKey: key }
+            // Si la tecla ya está presionada, no hacer nada
+            if (state.pressedKeys.has(normalizedKey)) {
+                return state;
             }
 
-            const newSet = new Set(state.pressedKeys)
-            newSet.add(key)
-            return { lastKey: key, pressedKeys: newSet }
+            const newSet = new Set(state.pressedKeys);
+            newSet.add(normalizedKey);
+            return { lastKey: normalizedKey, pressedKeys: newSet };
         })
     },
 
     onKeyUp: (key: string) => {
+        const normalizedKey = key.toLowerCase();
         set((state: KeyboardState) => {
-            const newSet = new Set(state.pressedKeys)
-            newSet.delete(key)
-            return { pressedKeys: newSet }
+            const newSet = new Set(state.pressedKeys);
+            newSet.delete(normalizedKey);
+            return { pressedKeys: newSet };
         })
     },
 
     pressVirtualKey: (key: string) => {
+        const normalizedKey = key.toLowerCase();
         set((state: KeyboardState) => {
-            if (state.pressedKeys.has(key)) {
-                return { lastKey: key }
+            if (state.pressedKeys.has(normalizedKey)) {
+                return state;
             }
 
-            const newSet = new Set(state.pressedKeys)
-            newSet.add(key)
-            return { lastKey: key, pressedKeys: newSet }
+            const newSet = new Set(state.pressedKeys);
+            newSet.add(normalizedKey);
+            return { lastKey: normalizedKey, pressedKeys: newSet };
         })
     },
 
     releaseVirtualKey: (key: string) => {
+        const normalizedKey = key.toLowerCase();
         set((state: KeyboardState) => {
-            const newSet = new Set(state.pressedKeys)
-            newSet.delete(key)
-            return { pressedKeys: newSet }
+            const newSet = new Set(state.pressedKeys);
+            newSet.delete(normalizedKey);
+            return { pressedKeys: newSet };
         })
     },
 
-    isKeyPressed: (key: string) => get().pressedKeys.has(key),
-}))
+    clearAllKeys: () => {
+        set({ pressedKeys: new Set<string>() });
+    },
+
+    isKeyPressed: (key: string) => get().pressedKeys.has(key.toLowerCase()),
+}));

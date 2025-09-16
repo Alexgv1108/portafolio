@@ -12,19 +12,32 @@ export function useKeyboardListener() {
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            onKeyDown(e.key)
+            // Prevenir la repetición de keydown cuando la tecla ya está presionada
+            if (e.repeat) return;
+            onKeyDown(e.key.toLowerCase());
         }
 
         const handleKeyUp = (e: KeyboardEvent) => {
-            onKeyUp(e.key)
+            onKeyUp(e.key.toLowerCase());
         }
 
-        window.addEventListener("keydown", handleKeyDown)
-        window.addEventListener("keyup", handleKeyUp)
+        // Manejar pérdida de foco para limpiar teclas presionadas
+        const handleBlur = () => {
+            // Limpiar todas las teclas cuando se pierde el foco
+            const store = useKeyboardStore.getState();
+            store.pressedKeys.forEach(key => {
+                onKeyUp(key);
+            });
+        }
+
+        window.addEventListener("keydown", handleKeyDown);
+        window.addEventListener("keyup", handleKeyUp);
+        window.addEventListener("blur", handleBlur);
 
         return () => {
-            window.removeEventListener("keydown", handleKeyDown)
-            window.removeEventListener("keyup", handleKeyUp)
+            window.removeEventListener("keydown", handleKeyDown);
+            window.removeEventListener("keyup", handleKeyUp);
+            window.removeEventListener("blur", handleBlur);
         }
     }, [onKeyDown, onKeyUp])
 }

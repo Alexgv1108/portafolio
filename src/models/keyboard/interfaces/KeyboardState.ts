@@ -7,4 +7,5 @@ export interface KeyboardState {
     isKeyPressed: (key: string) => boolean;
     pressVirtualKey: (key: string) => void;
     releaseVirtualKey: (key: string) => void;
+    clearAllKeys: () => void;
 }

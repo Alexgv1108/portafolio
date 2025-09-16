@@ -2,7 +2,6 @@ import { useEffect, useRef, useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Direction } from '../../models/character/enums/Direction';
 import { directionVectors } from '../../constants/directionVectors';
-import { keyToDirection } from '../../constants/keyToDirection';
 import { useKeyboardStore } from '../../hooks/stores/useKeyboardStore';
 import { useCharacterStore } from '../stores/useCharacterStore';
 import { usePixiAutoScroll } from '../scroll/usePixiAutoScroll';
@@ -54,41 +53,54 @@ export function usePixiMovement() {
     // Memoizar configuración de auto-scroll para evitar recalcular en cada frame
     const autoScrollConfig = useMemo(() => getAutoScrollConfig(), []);
 
-    // Memorizar mapas de direcciones diagonales para mejor rendimiento
-    const diagonalDirectionMap = useMemo(() => new Map([
-        [`${Direction.Up},${Direction.Right}`, Direction.UpRight],
-        [`${Direction.Down},${Direction.Right}`, Direction.DownRight],
-        [`${Direction.Up},${Direction.Left}`, Direction.UpLeft],
-        [`${Direction.Down},${Direction.Left}`, Direction.DownLeft],
-        [`${Direction.Right},${Direction.Up}`, Direction.UpRight],
-        [`${Direction.Right},${Direction.Down}`, Direction.DownRight],
-        [`${Direction.Left},${Direction.Up}`, Direction.UpLeft],
-        [`${Direction.Left},${Direction.Down}`, Direction.DownLeft],
-    ]), []);
-
-    // Optimizar cálculo de dirección
+    // Optimizar cálculo de dirección con mejor lógica para diagonales
     const calculateDirection = useCallback((pressedKeys: Set<string>): Direction => {
-        const keyCount = pressedKeys.size;
+        const keyArray = Array.from(pressedKeys);
         
-        if (keyCount === 0 || keyCount > 2) {
+        // Filtrar solo teclas WASD válidas
+        const wasdKeys = keyArray.filter(key => ['w', 'a', 's', 'd'].includes(key));
+        
+        if (wasdKeys.length === 0) {
             return Direction.Idle;
         }
 
-        const directions = Array.from(pressedKeys)
-            .map(key => keyToDirection[key])
-            .filter(Boolean);
+        // Crear flags para cada dirección
+        const isUp = wasdKeys.includes('w');
+        const isDown = wasdKeys.includes('s');
+        const isLeft = wasdKeys.includes('a');
+        const isRight = wasdKeys.includes('d');
 
-        if (directions.length === 1) {
-            return directions[0];
+        // Priorizar movimientos diagonales válidos
+        if (isUp && isRight && !isDown && !isLeft) {
+            return Direction.UpRight;
+        }
+        if (isUp && isLeft && !isDown && !isRight) {
+            return Direction.UpLeft;
+        }
+        if (isDown && isRight && !isUp && !isLeft) {
+            return Direction.DownRight;
+        }
+        if (isDown && isLeft && !isUp && !isRight) {
+            return Direction.DownLeft;
         }
 
-        if (directions.length === 2) {
-            const directionKey = directions.sort().join(',');
-            return diagonalDirectionMap.get(directionKey) || directions[0];
+        // Movimientos cardinales simples (solo si no hay conflictos)
+        if (isUp && !isDown) {
+            return Direction.Up;
+        }
+        if (isDown && !isUp) {
+            return Direction.Down;
+        }
+        if (isLeft && !isRight) {
+            return Direction.Left;
+        }
+        if (isRight && !isLeft) {
+            return Direction.Right;
         }
 
+        // Si hay teclas conflictivas (ej: W+S o A+D), no mover
         return Direction.Idle;
-    }, [diagonalDirectionMap]);
+    }, []);
 
     // Función de animación usando useRef para evitar recreaciones
     const animateRef = useRef<(currentTime: number) => void>(() => { });
