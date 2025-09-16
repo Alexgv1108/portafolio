@@ -3,11 +3,11 @@ import type { UsePixiAutoScrollProps } from '../../models/character/interfaces/U
 import { 
     AUTO_SCROLL_DISTANCE, 
     AUTO_SCROLL_COOLDOWN,
-    AUTO_SCROLL_REPOSITION_DELAY,
     AUTO_SCROLL_REPOSITION_OFFSET,
     getAutoScrollConfig
 } from '../../constants/autoScrollConfig';
 import { useDisableScroll } from './useDisableScroll';
+import { useCharacterStore } from '../stores/useCharacterStore';
 
 export function usePixiAutoScroll({ 
     getPosition, 
@@ -38,6 +38,9 @@ export function usePixiAutoScroll({
     // Deshabilitar scroll manual usando hook personalizado
     useDisableScroll();
 
+    // Acceso al store del personaje para controlar el estado de scrolling
+    const { setIsScrolling } = useCharacterStore();
+
     const checkAndScroll = useCallback(() => {
         const currentTime = Date.now();
         
@@ -63,6 +66,8 @@ export function usePixiAutoScroll({
         if (!isAtBottom && position.y > windowHeight - adjustedThreshold) {
             lastScrollTimeRef.current = currentTime;
             isScrollingRef.current = true;
+            // Bloquear movimiento del personaje
+            setIsScrolling(true);
             
             // Scroll más suave en móviles
             const scrollAmount = windowHeight * (scrollDistance / (isMobile ? 150 : 100));
@@ -72,18 +77,22 @@ export function usePixiAutoScroll({
                 behavior: isMobile ? 'auto' : 'smooth' // Auto en móviles para evitar conflictos
             });
 
-            // Reposicionar el personaje al top después del scroll con delay mayor en móviles
-            const repositionDelay = isMobile ? AUTO_SCROLL_REPOSITION_DELAY * 2 : AUTO_SCROLL_REPOSITION_DELAY;
+            // Reposicionar el personaje inmediatamente después del scroll
+            const currentPos = getPosition();
+            moveCharacter(currentPos.x, adjustedThreshold + AUTO_SCROLL_REPOSITION_OFFSET);
+            isScrollingRef.current = false;
+            
+            // Delay adicional SOLO para permitir movimiento (no afecta reposición)
             setTimeout(() => {
-                const currentPos = getPosition();
-                moveCharacter(currentPos.x, adjustedThreshold + AUTO_SCROLL_REPOSITION_OFFSET);
-                isScrollingRef.current = false;
-            }, repositionDelay);
+                setIsScrolling(false);
+            }, 500);
         }
         // Verificar si el personaje está cerca del top y no estamos en el top de la página
         else if (position.y < adjustedThreshold && !isAtTop) {
             lastScrollTimeRef.current = currentTime;
             isScrollingRef.current = true;
+            // Bloquear movimiento del personaje
+            setIsScrolling(true);
             
             // Scroll más suave en móviles
             const scrollAmount = windowHeight * (scrollDistance / (isMobile ? 150 : 100));
@@ -93,16 +102,18 @@ export function usePixiAutoScroll({
                 behavior: isMobile ? 'auto' : 'smooth' // Auto en móviles para evitar conflictos
             });
 
-            // Reposicionar el personaje al bottom después del scroll con delay mayor en móviles
-            const repositionDelay = isMobile ? AUTO_SCROLL_REPOSITION_DELAY * 2 : AUTO_SCROLL_REPOSITION_DELAY;
+            // Reposicionar el personaje inmediatamente después del scroll
+            const currentPos = getPosition();
+            const newY = windowHeight - adjustedThreshold - AUTO_SCROLL_REPOSITION_OFFSET;
+            moveCharacter(currentPos.x, newY);
+            isScrollingRef.current = false;
+            
+            // Delay adicional SOLO para permitir movimiento (no afecta reposición)
             setTimeout(() => {
-                const currentPos = getPosition();
-                const newY = windowHeight - adjustedThreshold - AUTO_SCROLL_REPOSITION_OFFSET;
-                moveCharacter(currentPos.x, newY);
-                isScrollingRef.current = false;
-            }, repositionDelay);
+                setIsScrolling(false);
+            }, 500);
         }
-    }, [getPosition, moveCharacter, customThreshold, scrollDistance, scrollCooldownMs, isMobile]);
+    }, [getPosition, moveCharacter, customThreshold, scrollDistance, scrollCooldownMs, isMobile, setIsScrolling]);
 
     return { checkAndScroll };
 }

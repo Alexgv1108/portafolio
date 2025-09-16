@@ -9,6 +9,7 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
     isMoving: false,
     assetsLoaded: false,
     characterRef: null,
+    isScrolling: false,
     
     // Acciones
     setPosition: (x: number, y: number) => {
@@ -30,6 +31,8 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
         set({ assetsLoaded: loaded });
     },
     
+    setIsScrolling: (isScrolling: boolean) => set({ isScrolling }),
+
     setCharacterRef: (ref: unknown) => {
         set({ characterRef: ref });
         

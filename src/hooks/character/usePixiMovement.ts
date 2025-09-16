@@ -18,12 +18,13 @@ export function usePixiMovement() {
         }))
     );
 
-    const { characterRef, setDirection, setPosition, getPosition } = useCharacterStore(
+    const { characterRef, setDirection, setPosition, getPosition, isScrolling } = useCharacterStore(
         useShallow((state) => ({
             characterRef: state.characterRef,
             setDirection: state.setDirection,
             setPosition: state.setPosition,
             getPosition: state.getPosition,
+            isScrolling: state.isScrolling,
         }))
     );
 
@@ -121,8 +122,8 @@ export function usePixiMovement() {
             setDirection(currentDirection);
         }
 
-        // Mover personaje si hay una dirección activa
-        if (currentDirection !== Direction.Idle && characterRef) {
+        // Mover personaje solo si hay una dirección activa Y NO está haciendo scroll
+        if (currentDirection !== Direction.Idle && characterRef && !isScrolling) {
             const directionVector = directionVectors[currentDirection];
             if (!directionVector) return;
 
@@ -157,7 +158,7 @@ export function usePixiMovement() {
         }
 
         animationRef.current = requestAnimationFrame(() => animateRef.current!(performance.now()));
-    }, [calculateDirection, pressedKeys, characterRef, setDirection, getPosition, moveCharacter, checkAndScroll, autoScrollConfig]);
+    }, [calculateDirection, pressedKeys, characterRef, setDirection, getPosition, moveCharacter, checkAndScroll, autoScrollConfig, isScrolling]);
 
     // Loop de animación wrapper
     const animate = useCallback((currentTime: number) => {

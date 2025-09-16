@@ -14,16 +14,17 @@ export function usePixiSpriteAnimation() {
         }))
     );
 
-    const { characterRef, assetsLoaded, direction, setCharacterRef } = useCharacterStore(
+    const { characterRef, assetsLoaded, direction, setCharacterRef, isScrolling } = useCharacterStore(
         useShallow((state) => ({
             characterRef: state.characterRef,
             assetsLoaded: state.assetsLoaded,
             direction: state.direction,
             setCharacterRef: state.setCharacterRef,
+            isScrolling: state.isScrolling,
         }))
     );
 
-    const updateCharacterSprite = useCallback((direction: Direction, moving: boolean) => {
+    const updateCharacterSprite = useCallback((direction: Direction, moving: boolean, isScrolling: boolean = false) => {
         if (!appZ || !assetsLoaded || !characterRef) return;
 
         const currentChar = characterRef as Sprite & {
@@ -34,7 +35,11 @@ export function usePixiSpriteAnimation() {
 
         // Determinar textura necesaria
         let textureKey = 'character-idle';
-        if (moving && direction !== Direction.Idle) {
+        
+        // Si está haciendo scroll, forzar idle independientemente de la dirección
+        if (isScrolling) {
+            textureKey = 'character-idle';
+        } else if (moving && direction !== Direction.Idle) {
             switch (direction) {
                 case Direction.Left:
                 case Direction.UpLeft:
@@ -105,9 +110,9 @@ export function usePixiSpriteAnimation() {
     useEffect(() => {
         if (assetsLoaded) {
             const moving = direction !== Direction.Idle;
-            updateCharacterSprite(direction, moving);
+            updateCharacterSprite(direction, moving, isScrolling);
         }
-    }, [direction, assetsLoaded, updateCharacterSprite]);
+    }, [direction, assetsLoaded, updateCharacterSprite, isScrolling]);
 
     return { updateCharacterSprite };
 }
