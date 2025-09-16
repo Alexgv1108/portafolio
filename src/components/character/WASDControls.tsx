@@ -34,11 +34,11 @@ export const WASDControls = () => {
         shadow-lg dark:shadow-2xl 
         ${textClasses} font-bold 
         transition-all duration-300 
-        hover:scale-110 hover:shadow-xl dark:hover:border-yellow-400 hover:cursor-pointer
+        hover:scale-110 hover:shadow-xl dark:hover:border-cyan-400 hover:cursor-pointer
         active:scale-95 focus:outline-none focus:ring-0
         ${isPressed
-            ? 'bg-gradient-to-br from-yellow-300 to-yellow-500 text-yellow-900 shadow-yellow-300/50 border-transparent'
-            : 'bg-gradient-to-br from-white to-gray-100 dark:from-gray-700 dark:to-gray-800 border-2 border-gray-200 dark:border-gray-600 text-gray-800 dark:text-yellow-300'
+            ? 'bg-gradient-to-br from-cyan-300 to-blue-500 text-white shadow-cyan-300/50 border-transparent'
+            : 'bg-gradient-to-br from-white to-slate-100 dark:from-slate-700 dark:to-slate-800 border-2 border-slate-200 dark:border-slate-600 text-slate-800 dark:text-cyan-300'
         }
     `;
     };

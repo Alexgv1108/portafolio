@@ -27,6 +27,6 @@ body {
 
 @layer components {
     .bg-gradient-title {
-        @apply bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent font-extrabold;
+        @apply bg-gradient-to-r from-cyan-500 via-blue-600 to-violet-600 bg-clip-text text-transparent font-extrabold;
     }
 }

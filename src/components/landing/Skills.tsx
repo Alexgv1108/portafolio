@@ -63,8 +63,8 @@ export const Skills = () => {
         <section className="relative z-10 w-full px-4 lg:px-8 xl:px-12 py-20 pt-10">
             <div className="max-w-7xl mx-auto">
                 {/* Título de Skills */}
-                <h2 className="text-4xl md:text-5xl xl:text-6xl font-extrabold mb-8 lg:mb-12 drop-shadow-md text-center transition-all duration-300 text-gray-900 dark:text-white">
-                    My <span className="text-yellow-500 dark:text-yellow-400">Skills</span>
+                <h2 className="text-4xl md:text-5xl xl:text-6xl font-extrabold mb-8 lg:mb-12 drop-shadow-md text-center transition-all duration-300 text-slate-800 dark:text-slate-100">
+                    My <span className="bg-gradient-to-r from-emerald-500 via-cyan-500 to-blue-600 bg-clip-text text-transparent">Skills</span>
                 </h2>
 
                 {/* Skills Grid */}
@@ -75,8 +75,8 @@ export const Skills = () => {
                             ref={skill.ref}
                             className={`relative flex flex-col items-center justify-center p-8 lg:p-10 rounded-2xl shadow-lg dark:shadow-2xl backdrop-blur-sm transform transition-all duration-300 ${
                                 (index === 0 && isOverFrontend) || (index === 1 && isOverBackend)
-                                    ? 'bg-gradient-to-br from-yellow-50 to-yellow-100 dark:from-yellow-900/50 dark:to-yellow-800/50 shadow-2xl border-2 border-yellow-500 dark:border-yellow-400'
-                                    : 'bg-white/80 dark:bg-gray-800/80 border border-gray-200/50 dark:border-gray-700/50'
+                                    ? 'bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/50 dark:to-blue-900/50 shadow-2xl border-2 border-cyan-500 dark:border-cyan-400'
+                                    : 'bg-white/90 dark:bg-slate-800/90 border border-slate-200/50 dark:border-slate-700/50'
                             }`}
                             style={{
                                 minHeight: '200px',
@@ -86,34 +86,34 @@ export const Skills = () => {
                             {/* Indicador de interacción */}
                             {((index === 0 && isOverFrontend) || (index === 1 && isOverBackend)) && (
                                 <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 animate-bounce">
-                                    <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap shadow-lg">
+                                    <div className="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap shadow-lg">
                                         <span className="flex items-center gap-1">
-                                            <kbd className="bg-gray-700 dark:bg-gray-300 text-white dark:text-gray-900 px-1 py-0.5 rounded text-xs font-mono">
+                                            <kbd className="bg-slate-700 dark:bg-slate-300 text-white dark:text-slate-900 px-1 py-0.5 rounded text-xs font-mono">
                                                 ESPACIO
                                             </kbd>
                                             para interactuar
                                         </span>
-                                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900 dark:border-t-gray-100"></div>
+                                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-slate-900 dark:border-t-slate-100"></div>
                                     </div>
                                 </div>
                             )}
                             <div className={`mb-6 p-4 rounded-full transition-all duration-300 ${
                                 (index === 0 && isOverFrontend) || (index === 1 && isOverBackend)
-                                    ? 'bg-yellow-200 dark:bg-yellow-700/50'
-                                    : 'bg-gray-100 dark:bg-gray-700'
+                                    ? 'bg-cyan-200 dark:bg-cyan-700/50'
+                                    : 'bg-slate-100 dark:bg-slate-700'
                             }`}>
                                 <div className={`transition-colors duration-300 ${
                                     (index === 0 && isOverFrontend) || (index === 1 && isOverBackend)
-                                        ? 'text-yellow-600 dark:text-yellow-300'
-                                        : ''
+                                        ? 'text-cyan-600 dark:text-cyan-300'
+                                        : 'text-slate-600 dark:text-slate-300'
                                 }`}>
                                     {skill.icon}
                                 </div>
                             </div>
                             <span className={`font-semibold text-center text-lg lg:text-xl transition-colors duration-300 ${
                                 (index === 0 && isOverFrontend) || (index === 1 && isOverBackend)
-                                    ? 'text-yellow-700 dark:text-yellow-300'
-                                    : 'text-gray-900 dark:text-white'
+                                    ? 'text-cyan-700 dark:text-cyan-300'
+                                    : 'text-slate-800 dark:text-slate-200'
                             }`}>
                                 {skill.name}
                             </span>
@@ -123,10 +123,10 @@ export const Skills = () => {
 
                 {/* Instrucciones para el usuario */}
                 <div className="mt-20 lg:mt-24 text-center">
-                    <div className="inline-flex items-center gap-2 px-6 py-3 bg-blue-50 dark:bg-blue-900/30 rounded-full border border-blue-200 dark:border-blue-700/50">
+                    <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-50/80 to-blue-50/80 dark:bg-gradient-to-r dark:from-cyan-900/30 dark:to-blue-900/30 rounded-full border border-cyan-200/50 dark:border-cyan-700/50 backdrop-blur-sm">
                         <span className="text-2xl">💡</span>
-                        <p className="text-gray-700 dark:text-gray-300 text-sm lg:text-base">
-                            <strong className="text-blue-700 dark:text-blue-300">Tip:</strong> Mueve tu personaje con las teclas WASD por encima de los elementos para activar indicadores especiales
+                        <p className="text-slate-700 dark:text-slate-300 text-sm lg:text-base">
+                            <strong className="text-cyan-700 dark:text-cyan-300">Tip:</strong> Mueve tu personaje con las teclas WASD por encima de los elementos para activar indicadores especiales
                         </p>
                     </div>
                 </div>
