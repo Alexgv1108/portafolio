@@ -26,8 +26,8 @@ export const WASDControls = () => {
 
     const getKeyStyles = (key: string) => {
         const isPressed = pressedKeys.has(key.toLowerCase());
-        const sizeClasses = isMobile ? 'w-14 h-14' : 'w-10 h-10';
-        const textClasses = isMobile ? 'text-xl' : 'text-sm';
+        const sizeClasses = isMobile ? 'w-12 h-12' : 'w-10 h-10';
+        const textClasses = isMobile ? 'text-lg' : 'text-sm';
         
         return `
         ${sizeClasses} flex items-center justify-center rounded-xl
@@ -58,19 +58,23 @@ export const WASDControls = () => {
     };
 
     return (
-        <div className={`fixed z-50 select-none ${
+        <div className={`fixed z-10 select-none transition-all duration-300 ${
             isMobile 
-                ? 'bottom-4 left-1/2 -translate-x-1/2' 
+                ? 'bottom-6 right-4 opacity-90 hover:opacity-100' 
                 : 'top-4 left-4'
         }`}>
-            <div className="p-4 rounded-2xl bg-white/20 dark:bg-slate-900/40 backdrop-blur-lg border border-white/20 dark:border-slate-700/30 shadow-xl shadow-slate-200/20 dark:shadow-slate-900/40">
-                <div className="mb-3 text-center">
+            <div className={`p-4 rounded-2xl backdrop-blur-lg border shadow-xl ${
+                isMobile 
+                    ? 'bg-white/15 dark:bg-slate-900/30 border-white/15 dark:border-slate-700/25 shadow-slate-200/15 dark:shadow-slate-900/30'
+                    : 'bg-white/20 dark:bg-slate-900/40 border-white/20 dark:border-slate-700/30 shadow-slate-200/20 dark:shadow-slate-900/40'
+            }`}>
+                <div className="mb-2 text-center">
                     <span className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                         Controles
                     </span>
                 </div>
                 
-                <div className={`flex flex-col items-center ${isMobile ? 'gap-3' : 'gap-1'}`}>
+                <div className={`flex flex-col items-center ${isMobile ? 'gap-2' : 'gap-1'}`}>
                     {/* W */}
                     <div className="flex justify-center">
                         <div 
@@ -86,7 +90,7 @@ export const WASDControls = () => {
                     </div>
 
                     {/* A S D */}
-                    <div className={`flex ${isMobile ? 'gap-3' : 'gap-1'}`}>
+                    <div className={`flex ${isMobile ? 'gap-2' : 'gap-1'}`}>
                         {["A", "S", "D"].map((key) => (
                             <div
                                 key={key}
@@ -103,7 +107,7 @@ export const WASDControls = () => {
                     </div>
                 </div>
                 
-                <div className="mt-3 text-center">
+                <div className="mt-2 text-center">
                     <span className="text-xs text-slate-500 dark:text-slate-500">
                         ESPACIO para interactuar
                     </span>

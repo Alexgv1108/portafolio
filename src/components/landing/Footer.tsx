@@ -33,19 +33,19 @@ export const Footer = () => {
                             <div className="flex items-center space-x-3 group">
                                 <Mail className="w-5 h-5 text-emerald-400 group-hover:text-blue-400 transition-colors" />
                                 <span className="group-hover:text-white transition-colors">
-                                    ale.garcia.herrera.1998@gmail.com
+                                    alexgallego1108@gmail.com
                                 </span>
                             </div>
                             <div className="flex items-center space-x-3 group">
                                 <Phone className="w-5 h-5 text-emerald-400 group-hover:text-blue-400 transition-colors" />
                                 <span className="group-hover:text-white transition-colors">
-                                    +56 9 1234 5678
+                                    +57 304 679 4664
                                 </span>
                             </div>
                             <div className="flex items-center space-x-3 group">
                                 <MapPin className="w-5 h-5 text-emerald-400 group-hover:text-blue-400 transition-colors" />
                                 <span className="group-hover:text-white transition-colors">
-                                    Santiago, Chile
+                                    medellin, Colombia
                                 </span>
                             </div>
                         </div>
@@ -76,7 +76,7 @@ export const Footer = () => {
                         </h3>
                         <div className="flex space-x-4">
                             <a
-                                href="https://github.com/alexgarciaherrera"
+                                href="https://github.com/Alexgv1108"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="group p-3 rounded-xl bg-white/10 hover:bg-emerald-500/20 border border-slate-700 hover:border-emerald-500 transition-all duration-300 hover:scale-110"
@@ -84,7 +84,7 @@ export const Footer = () => {
                                 <Github className="w-6 h-6 text-slate-400 group-hover:text-emerald-400 transition-colors" />
                             </a>
                             <a
-                                href="https://linkedin.com/in/alex-garcia-herrera"
+                                href="www.linkedin.com/in/john-alexander-gallego-vasquez-988b361ba"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="group p-3 rounded-xl bg-white/10 hover:bg-blue-500/20 border border-slate-700 hover:border-blue-500 transition-all duration-300 hover:scale-110"
@@ -92,7 +92,7 @@ export const Footer = () => {
                                 <Linkedin className="w-6 h-6 text-slate-400 group-hover:text-blue-400 transition-colors" />
                             </a>
                             <a
-                                href="mailto:ale.garcia.herrera.1998@gmail.com"
+                                href="mailto:alexgallego1108@gmail.com"
                                 className="group p-3 rounded-xl bg-white/10 hover:bg-emerald-500/20 border border-slate-700 hover:border-emerald-500 transition-all duration-300 hover:scale-110"
                             >
                                 <Mail className="w-6 h-6 text-slate-400 group-hover:text-emerald-400 transition-colors" />

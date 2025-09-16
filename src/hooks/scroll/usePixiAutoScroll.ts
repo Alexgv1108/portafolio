@@ -75,10 +75,9 @@ export function usePixiAutoScroll({
             
             // Scroll más suave en móviles
             const scrollAmount = windowHeight * (scrollDistance / (isMobile ? 150 : 100));
-            
             window.scrollBy({
                 top: scrollAmount,
-                behavior: isMobile ? 'auto' : 'smooth' // Auto en móviles para evitar conflictos
+                behavior: 'smooth'
             });
 
             // Reposicionar el personaje inmediatamente después del scroll
