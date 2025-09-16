@@ -4,6 +4,7 @@ import { Assets, Sprite } from 'pixi.js';
 import { getCharacterDimensions } from '../../constants/characterDimensions';
 import { useCharacterStore } from '../stores/useCharacterStore';
 import { useAppStore } from '../stores/useAppStore';
+import { useModalStore } from '../stores/useModalStore';
 
 export function usePixiSprite() {
 
@@ -14,13 +15,16 @@ export function usePixiSprite() {
         }))
     );
 
-    const { assetsLoaded, setCharacterRef, setPosition } = useCharacterStore(
+    const { assetsLoaded, setCharacterRef, setPosition, characterRef } = useCharacterStore(
         useShallow((state) => ({
             assetsLoaded: state.assetsLoaded,
             setCharacterRef: state.setCharacterRef,
             setPosition: state.setPosition,
+            characterRef: state.characterRef,
         }))
     );
+
+    const { isModalOpen } = useModalStore();
 
     useEffect(() => {
         if (!appZ || !assetsLoaded) return;
@@ -73,5 +77,12 @@ export function usePixiSprite() {
             }
         };
     }, [appZ, assetsLoaded, appAddChildToContainer, setCharacterRef, setPosition]);
+
+    // Efecto para ocultar/mostrar el personaje cuando hay modales abiertos
+    useEffect(() => {
+        if (characterRef && typeof characterRef === 'object' && 'visible' in characterRef) {
+            (characterRef as { visible: boolean }).visible = !isModalOpen;
+        }
+    }, [characterRef, isModalOpen]);
 
 }

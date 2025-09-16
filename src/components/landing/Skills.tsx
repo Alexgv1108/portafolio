@@ -2,21 +2,16 @@ import { Code, Server, Database, Cloud } from "lucide-react";
 import { useSimplePixiDetection } from "../../hooks/dom/useSimplePixiDetection";
 import { useSpacebarInteraction } from "../../hooks/keyboard/useSpacebarInteraction";
 import { SkillModal } from "../common/SkillModal";
-import { useRef, useState } from "react";
+import { useRef } from "react";
+import { useModalStore } from '../../hooks/stores/useModalStore';
 
 export const Skills = () => {
     // Referencias para los elementos detectables
     const frontendSkillRef = useRef<HTMLDivElement>(null);
     const backendSkillRef = useRef<HTMLDivElement>(null);
 
-    // Estado para el modal
-    const [modalState, setModalState] = useState<{
-        isOpen: boolean;
-        skillType: 'frontend' | 'backend' | null;
-    }>({
-        isOpen: false,
-        skillType: null
-    });
+    // Estado global para el modal
+    const { isModalOpen, modalType, openModal, closeModal } = useModalStore();
 
     const skills = [
         { name: "Frontend Development", icon: <Code className="w-8 h-8 lg:w-10 lg:h-10" />, ref: frontendSkillRef },
@@ -37,15 +32,11 @@ export const Skills = () => {
 
     // Manejadores de interacción
     const handleFrontendInteraction = () => {
-        setModalState({ isOpen: true, skillType: 'frontend' });
+        openModal('frontend');
     };
 
     const handleBackendInteraction = () => {
-        setModalState({ isOpen: true, skillType: 'backend' });
-    };
-
-    const closeModal = () => {
-        setModalState({ isOpen: false, skillType: null });
+        openModal('backend');
     };
 
     // Hooks de interacción con barra espaciadora
@@ -175,11 +166,11 @@ export const Skills = () => {
             </div>
 
             {/* Modal de Skills */}
-            {modalState.skillType && (
+            {modalType && (
                 <SkillModal
-                    isOpen={modalState.isOpen}
+                    isOpen={isModalOpen}
                     onClose={closeModal}
-                    skillType={modalState.skillType}
+                    skillType={modalType as 'frontend' | 'backend'}
                 />
             )}
         </section>
