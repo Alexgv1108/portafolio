@@ -58,7 +58,7 @@ export const WASDControls = () => {
     };
 
     return (
-        <div className={`fixed z-10 select-none transition-all duration-300 ${
+        <div className={`fixed z-40 select-none transition-all duration-300 ${
             isMobile 
                 ? 'bottom-20 right-4 opacity-90 hover:opacity-100'
                 : 'top-4 left-4'
