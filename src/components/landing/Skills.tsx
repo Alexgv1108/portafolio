@@ -60,73 +60,115 @@ export const Skills = () => {
     });
 
     return (
-        <section className="relative z-10 w-full px-4 lg:px-8 xl:px-12 py-20 pt-10">
-            <div className="max-w-7xl mx-auto">
-                {/* Título de Skills */}
-                <h2 className="text-4xl md:text-5xl xl:text-6xl font-extrabold mb-8 lg:mb-12 drop-shadow-md text-center transition-all duration-300 text-slate-800 dark:text-slate-100">
-                    My <span className="bg-gradient-to-r from-emerald-500 via-cyan-500 to-blue-600 bg-clip-text text-transparent">Skills</span>
-                </h2>
+        <section className="relative z-10 w-full px-6 lg:px-8 py-24">
+            <div className="max-w-6xl mx-auto">
+                {/* Section Header */}
+                <div className="text-center mb-16">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-100/80 dark:bg-emerald-900/30 rounded-full text-emerald-700 dark:text-emerald-400 text-sm font-medium mb-6 backdrop-blur-sm border border-emerald-200/50 dark:border-emerald-800/50">
+                        <span className="text-lg">⚡</span>
+                        Expertise
+                    </div>
+                    
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-slate-100 mb-8 leading-tight">
+                        Habilidades{' '}
+                        <span className="bg-gradient-title">técnicas</span>
+                    </h2>
+                    
+                    <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                        Especializado en tecnologías modernas para crear soluciones completas y escalables
+                    </p>
+                </div>
 
                 {/* Skills Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 xl:gap-10 max-w-6xl mx-auto">
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
                     {skills.map((skill, index) => (
                         <div
                             key={skill.name}
                             ref={skill.ref}
-                            className={`relative flex flex-col items-center justify-center p-8 lg:p-10 rounded-2xl shadow-lg dark:shadow-2xl backdrop-blur-sm transform transition-all duration-300 ${
+                            className={`group relative transition-all duration-300 ${
                                 (index === 0 && isOverFrontend) || (index === 1 && isOverBackend)
-                                    ? 'bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/50 dark:to-blue-900/50 shadow-2xl border-2 border-cyan-500 dark:border-cyan-400'
-                                    : 'bg-white/90 dark:bg-slate-800/90 border border-slate-200/50 dark:border-slate-700/50'
+                                    ? 'transform scale-105'
+                                    : 'hover:transform hover:scale-105'
                             }`}
-                            style={{
-                                minHeight: '200px',
-                                backdropFilter: 'blur(10px)'
-                            }}
                         >
-                            {/* Indicador de interacción */}
+                            {/* Interactive Indicator */}
                             {((index === 0 && isOverFrontend) || (index === 1 && isOverBackend)) && (
-                                <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 animate-bounce">
-                                    <div className="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap shadow-lg">
-                                        <span className="flex items-center gap-1">
-                                            <kbd className="bg-slate-700 dark:bg-slate-300 text-white dark:text-slate-900 px-1 py-0.5 rounded text-xs font-mono">
+                                <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 animate-bounce z-20">
+                                    <div className="bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap shadow-xl backdrop-blur-sm">
+                                        <div className="flex items-center gap-2">
+                                            <kbd className="bg-emerald-600 text-white px-2 py-1 rounded text-xs font-mono">
                                                 ESPACIO
                                             </kbd>
-                                            para interactuar
-                                        </span>
+                                            <span>para explorar</span>
+                                        </div>
                                         <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-slate-900 dark:border-t-slate-100"></div>
                                     </div>
                                 </div>
                             )}
-                            <div className={`mb-6 p-4 rounded-full transition-all duration-300 ${
+
+                            {/* Skill Card */}
+                            <div className={`card-modern p-8 h-full transition-all duration-300 group-hover:shadow-2xl ${
                                 (index === 0 && isOverFrontend) || (index === 1 && isOverBackend)
-                                    ? 'bg-cyan-200 dark:bg-cyan-700/50'
-                                    : 'bg-slate-100 dark:bg-slate-700'
+                                    ? 'ring-2 ring-emerald-500 bg-gradient-to-br from-emerald-50 to-blue-50 dark:from-emerald-950/50 dark:to-blue-950/50'
+                                    : ''
                             }`}>
-                                <div className={`transition-colors duration-300 ${
+                                {/* Icon Container */}
+                                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-300 ${
                                     (index === 0 && isOverFrontend) || (index === 1 && isOverBackend)
-                                        ? 'text-cyan-600 dark:text-cyan-300'
-                                        : 'text-slate-600 dark:text-slate-300'
+                                        ? 'bg-gradient-to-r from-emerald-500 to-blue-500 text-white scale-110'
+                                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-gradient-to-r group-hover:from-emerald-500 group-hover:to-blue-500 group-hover:text-white'
                                 }`}>
                                     {skill.icon}
                                 </div>
+
+                                {/* Content */}
+                                <h3 className={`text-xl font-semibold mb-3 transition-colors duration-300 ${
+                                    (index === 0 && isOverFrontend) || (index === 1 && isOverBackend)
+                                        ? 'text-emerald-700 dark:text-emerald-400'
+                                        : 'text-slate-900 dark:text-slate-100'
+                                }`}>
+                                    {skill.name}
+                                </h3>
+
+                                {/* Description */}
+                                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                    {index === 0 && "Interfaces modernas y experiencias de usuario excepcionales"}
+                                    {index === 1 && "APIs robustas y arquitecturas escalables"}
+                                    {index === 2 && "Gestión eficiente de datos y consultas optimizadas"}
+                                    {index === 3 && "Despliegue y infraestructura en la nube"}
+                                </p>
+
+                                {/* Progress indicator */}
+                                <div className="mt-6">
+                                    <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-500 mb-2">
+                                        <span>Experiencia</span>
+                                        <span>{index < 2 ? 'Avanzado' : 'Intermedio'}</span>
+                                    </div>
+                                    <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5">
+                                        <div 
+                                            className={`h-1.5 rounded-full transition-all duration-300 ${
+                                                (index === 0 && isOverFrontend) || (index === 1 && isOverBackend)
+                                                    ? 'bg-gradient-to-r from-emerald-500 to-blue-500'
+                                                    : 'bg-slate-400 dark:bg-slate-500'
+                                            }`}
+                                            style={{ width: index < 2 ? '85%' : '70%' }}
+                                        ></div>
+                                    </div>
+                                </div>
                             </div>
-                            <span className={`font-semibold text-center text-lg lg:text-xl transition-colors duration-300 ${
-                                (index === 0 && isOverFrontend) || (index === 1 && isOverBackend)
-                                    ? 'text-cyan-700 dark:text-cyan-300'
-                                    : 'text-slate-800 dark:text-slate-200'
-                            }`}>
-                                {skill.name}
-                            </span>
                         </div>
                     ))}
                 </div>
 
-                {/* Instrucciones para el usuario */}
-                <div className="mt-20 lg:mt-24 text-center">
-                    <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-50/80 to-blue-50/80 dark:bg-gradient-to-r dark:from-cyan-900/30 dark:to-blue-900/30 rounded-full border border-cyan-200/50 dark:border-cyan-700/50 backdrop-blur-sm">
-                        <span className="text-2xl">💡</span>
-                        <p className="text-slate-700 dark:text-slate-300 text-sm lg:text-base">
-                            <strong className="text-cyan-700 dark:text-cyan-300">Tip:</strong> Mueve tu personaje con las teclas WASD por encima de los elementos para activar indicadores especiales
+                {/* Call to Action */}
+                <div className="text-center">
+                    <div className="card-modern p-6 max-w-md mx-auto">
+                        <div className="flex items-center gap-3 justify-center mb-4">
+                            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                            <span className="text-emerald-700 dark:text-emerald-400 font-medium">Pro tip</span>
+                        </div>
+                        <p className="text-slate-600 dark:text-slate-400 text-sm">
+                            Mueve tu personaje sobre las tarjetas de <strong>Frontend</strong> y <strong>Backend</strong> para acceder a información detallada
                         </p>
                     </div>
                 </div>

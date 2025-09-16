@@ -1,44 +1,72 @@
 
 export const Main = () => {
     return (
-        <section className="relative z-10 w-full px-4">
-            {/* Bloque Título */}
-            <div className="block mb-12 text-center pt-10">
-                <h1 className="text-slate-800 dark:text-slate-100 text-5xl md:text-6xl font-extrabold drop-shadow-md mb-4">
-                    Llegaste a <span className="bg-gradient-title">Mi portafolio</span>
-                </h1>
-            </div>
-
-            {/* Bloque Subtítulo */}
-            <div className="block text-center max-w-2xl mx-auto mb-8">
-                <p className="text-slate-700 dark:text-slate-300 text-lg md:text-xl drop-shadow-sm">
-                    Hola, soy Alex, un desarrollador Web full stack que le encanta la programación.
-                </p>
-            </div>
-
-            {/* Información adicional */}
-            <div className="block text-center">
-                <div className="bg-gradient-to-r from-cyan-50/80 via-blue-50/80 to-violet-50/80 dark:from-slate-800/90 dark:via-slate-800/90 dark:to-slate-700/90 rounded-2xl p-6 
-                    max-w-md mx-auto border border-cyan-200/50 dark:border-slate-600/50 shadow-lg backdrop-blur-sm">
-                    <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed">
-                        Usa las teclas{' '}
-                        <span className="inline-flex items-center gap-1 mx-1">
-                            {['W', 'A', 'S', 'D'].map((key) => (
-                                <kbd 
-                                    key={key}
-                                    className="px-2 py-1 text-xs font-bold bg-white/90 dark:bg-slate-800/90 border border-slate-300/50 
-                                    dark:border-slate-500/50 rounded-md shadow-sm text-slate-800 dark:text-cyan-300 
-                                    ring-1 ring-cyan-500/20 dark:ring-cyan-400/30"
-                                >
-                                    {key}
-                                </kbd>
-                            ))}
+        <section className="relative z-10 w-full px-6 lg:px-8">
+            {/* Hero Section */}
+            <div className="max-w-5xl mx-auto pt-16 pb-8">
+                {/* Título Principal con mayor impacto */}
+                <div className="text-center mb-12">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-100/80 dark:bg-emerald-900/30 rounded-full text-emerald-700 dark:text-emerald-400 text-sm font-medium mb-6 backdrop-blur-sm border border-emerald-200/50 dark:border-emerald-800/50">
+                        <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                        Disponible para proyectos
+                    </div>
+                    
+                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 dark:text-slate-100 mb-6 leading-tight">
+                        Hola, soy{' '}
+                        <span className="bg-gradient-title block lg:inline">
+                            Alex Gallego
+                        </span>
+                    </h1>
+                    
+                    <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed font-light">
+                        Desarrollador Full Stack especializado en crear{' '}
+                        <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                            experiencias digitales excepcionales
                         </span>{' '}
-                        para mover el personaje por la página y descubrir elementos interactivos
+                        con tecnologías modernas
                     </p>
-                    <p className="text-slate-500 dark:text-slate-400 text-xs mt-3 italic">
-                        ¡También funciona en dispositivos móviles con los controles táctiles!
-                    </p>
+                </div>
+
+                {/* CTA Section */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+                    <button className="button-primary px-8 py-4 rounded-xl font-semibold text-lg">
+                        Ver mis proyectos
+                    </button>
+                    <button className="px-8 py-4 rounded-xl font-semibold text-lg border-2 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:border-emerald-500 dark:hover:border-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-300">
+                        Descargar CV
+                    </button>
+                </div>
+
+                {/* Interactive Guide */}
+                <div className="card-modern p-6 max-w-lg mx-auto">
+                    <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
+                            <span className="text-2xl">🎮</span>
+                        </div>
+                        <div>
+                            <h3 className="text-primary font-semibold text-lg mb-2">
+                                Explora de forma interactiva
+                            </h3>
+                            <p className="text-secondary text-sm leading-relaxed mb-4">
+                                Usa las teclas{' '}
+                                <span className="inline-flex items-center gap-1 mx-1">
+                                    {['W', 'A', 'S', 'D'].map((key) => (
+                                        <kbd 
+                                            key={key}
+                                            className="px-2 py-1 text-xs font-bold bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md text-slate-700 dark:text-slate-300 shadow-sm"
+                                        >
+                                            {key}
+                                        </kbd>
+                                    ))}
+                                </span>{' '}
+                                para mover tu personaje y descubrir elementos interactivos
+                            </p>
+                            <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-500">
+                                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
+                                También disponible en dispositivos móviles
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
