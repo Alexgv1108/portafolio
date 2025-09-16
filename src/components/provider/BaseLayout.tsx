@@ -4,15 +4,25 @@ import { WASDControls } from '../character/WASDControls';
 import { LightAndDarkMode } from "../button/LightAndDarkMode";
 import { Footer } from '../landing/Footer';
 import { usePixiGame } from '../../hooks/screen/usePixiGame';
+import { useToggleTheme } from "../../hooks/style/useToggleTheme";
+import { useAppStore } from "../../hooks/stores/useAppStore";
+import { useShallow } from "zustand/shallow";
 
 const BaseLayout = ({ children }: { children: ReactNode }) => {
-    const { containerRef } = usePixiGame();
+    useToggleTheme();
+    usePixiGame();
+
+    const { setContainer } = useAppStore(
+        useShallow((state) => ({
+            setContainer: state.setContainer
+        }))
+    );
 
     return (
         <>
             <Background />
-            <div 
-                ref={containerRef} 
+            <div
+                ref={setContainer}
                 className="fixed inset-0 pointer-events-none z-50"
             />
             <WASDControls />

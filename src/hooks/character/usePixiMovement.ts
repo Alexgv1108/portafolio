@@ -1,15 +1,16 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Direction } from '../../models/character/enums/Direction';
 import { directionVectors } from '../../constants/directionVectors';
 import { keyToDirection } from '../../constants/keyToDirection';
-import { useKeyboardStore } from '../../stores/useKeyboardStore';
-import { useCharacterStore } from '../../stores/useCharacterStore';
+import { useKeyboardStore } from '../../hooks/stores/useKeyboardStore';
+import { useCharacterStore } from '../stores/useCharacterStore';
 import { usePixiAutoScroll } from '../scroll/usePixiAutoScroll';
 import { getAutoScrollConfig } from '../../constants/autoScrollConfig';
 import type { KeyboardState } from '../../models/keyboard/interfaces/KeyboardState';
 
 const SPEED = 300; // píxeles por segundo
+const MAX_DELTA_TIME = 50; // Máximo 50ms por frame
 
 export function usePixiMovement() {
     const { pressedKeys } = useKeyboardStore(
@@ -18,12 +19,7 @@ export function usePixiMovement() {
         }))
     );
 
-    const { 
-        characterRef, 
-        setDirection, 
-        setPosition, 
-        getPosition 
-    } = useCharacterStore(
+    const { characterRef, setDirection, setPosition, getPosition } = useCharacterStore(
         useShallow((state) => ({
             characterRef: state.characterRef,
             setDirection: state.setDirection,
@@ -55,114 +51,106 @@ export function usePixiMovement() {
     // Hook para auto-scroll
     const { checkAndScroll } = usePixiAutoScroll({ getPosition, moveCharacter });
 
-    // Refs para acceder a valores actuales sin recrear el loop
-    const stateRef = useRef({
-        characterRef,
-        setDirection,
-        getPosition,
-        moveCharacter,
-        pressedKeys,
-        checkAndScroll
-    });
+    // Memoizar configuración de auto-scroll para evitar recalcular en cada frame
+    const autoScrollConfig = useMemo(() => getAutoScrollConfig(), []);
 
-    stateRef.current = {
-        characterRef,
-        setDirection,
-        getPosition,
-        moveCharacter,
-        pressedKeys,
-        checkAndScroll
-    };
+    // Memorizar mapas de direcciones diagonales para mejor rendimiento
+    const diagonalDirectionMap = useMemo(() => new Map([
+        [`${Direction.Up},${Direction.Right}`, Direction.UpRight],
+        [`${Direction.Down},${Direction.Right}`, Direction.DownRight],
+        [`${Direction.Up},${Direction.Left}`, Direction.UpLeft],
+        [`${Direction.Down},${Direction.Left}`, Direction.DownLeft],
+        [`${Direction.Right},${Direction.Up}`, Direction.UpRight],
+        [`${Direction.Right},${Direction.Down}`, Direction.DownRight],
+        [`${Direction.Left},${Direction.Up}`, Direction.UpLeft],
+        [`${Direction.Left},${Direction.Down}`, Direction.DownLeft],
+    ]), []);
+
+    // Optimizar cálculo de dirección
+    const calculateDirection = useCallback((pressedKeys: Set<string>): Direction => {
+        const keyCount = pressedKeys.size;
+        
+        if (keyCount === 0 || keyCount > 2) {
+            return Direction.Idle;
+        }
+
+        const directions = Array.from(pressedKeys)
+            .map(key => keyToDirection[key])
+            .filter(Boolean);
+
+        if (directions.length === 1) {
+            return directions[0];
+        }
+
+        if (directions.length === 2) {
+            const directionKey = directions.sort().join(',');
+            return diagonalDirectionMap.get(directionKey) || directions[0];
+        }
+
+        return Direction.Idle;
+    }, [diagonalDirectionMap]);
 
     // Función de animación usando useRef para evitar recreaciones
-    const animateRef = useRef<(currentTime: number) => void>(() => {});
-    
-    animateRef.current = (currentTime: number) => {
+    const animateRef = useRef<(currentTime: number) => void>(() => { });
+
+    animateRef.current = useCallback((currentTime: number) => {
         const deltaTime = currentTime - lastTimeRef.current;
         
         // Evitar deltaTime muy grandes en el primer frame o después de pausas
-        const clampedDeltaTime = Math.min(deltaTime, 50); // Máximo 50ms por frame
+        const clampedDeltaTime = Math.min(deltaTime, MAX_DELTA_TIME);
         lastTimeRef.current = currentTime;
 
-        const { 
-            characterRef: currentCharacterRef, 
-            setDirection: currentSetDirection,
-            getPosition: currentGetPosition,
-            moveCharacter: currentMoveCharacter,
-            pressedKeys: currentPressedKeys,
-            checkAndScroll: currentCheckAndScroll
-        } = stateRef.current;
+        // Calcular dirección actual de forma optimizada
+        const currentDirection = calculateDirection(pressedKeys as Set<string>);
 
-        // Calcular dirección actual
-        const keyCount = currentPressedKeys?.size || 0;
-        let currentDirection = Direction.Idle;
-        
-        if (keyCount > 0 && keyCount <= 2) {
-            const directions = Array.from(currentPressedKeys as Set<string>)
-                .map(key => keyToDirection[key])
-                .filter(Boolean);
-
-            if (directions.length === 1) {
-                currentDirection = directions[0];
-            } else if (directions.length === 2) {
-                const dirSet = new Set(directions);
-                
-                if (dirSet.has(Direction.Up) && dirSet.has(Direction.Right)) {
-                    currentDirection = Direction.UpRight;
-                } else if (dirSet.has(Direction.Down) && dirSet.has(Direction.Right)) {
-                    currentDirection = Direction.DownRight;
-                } else if (dirSet.has(Direction.Up) && dirSet.has(Direction.Left)) {
-                    currentDirection = Direction.UpLeft;
-                } else if (dirSet.has(Direction.Down) && dirSet.has(Direction.Left)) {
-                    currentDirection = Direction.DownLeft;
-                } else {
-                    currentDirection = directions[0];
-                }
-            }
-        }
-
-        // Actualizar dirección si cambió
+        // Actualizar dirección solo si cambió
         if (lastDirectionRef.current !== currentDirection) {
             lastDirectionRef.current = currentDirection;
-            currentSetDirection(currentDirection);
+            setDirection(currentDirection);
         }
 
         // Mover personaje si hay una dirección activa
-        if (currentDirection !== Direction.Idle && currentCharacterRef) {
-            const [vx, vy] = directionVectors[currentDirection] || [0, 0];
+        if (currentDirection !== Direction.Idle && characterRef) {
+            const directionVector = directionVectors[currentDirection];
+            if (!directionVector) return;
+
+            const [vx, vy] = directionVector;
             const length = Math.hypot(vx, vy);
 
             if (length > 0) {
-                const currentPos = currentGetPosition();
+                const currentPos = getPosition();
                 const deltaSeconds = clampedDeltaTime / 1000;
-                
+
                 // Calcular nueva posición
-                const newX = currentPos.x + (vx / length) * SPEED * deltaSeconds;
-                const newY = currentPos.y + (vy / length) * SPEED * deltaSeconds;
-
-
-                // Obtener límites dinámicos
-                const config = getAutoScrollConfig();
+                const normalizedVx = vx / length;
+                const normalizedVy = vy / length;
+                const displacement = SPEED * deltaSeconds;
                 
-                // Aplicar límites de pantalla
-                const boundedX = Math.max(config.boundaryHorizontal, Math.min(newX, window.innerWidth - config.boundaryHorizontal));
-                // Límites verticales respetando las dimensiones del personaje
-                const boundedY = Math.max(config.boundaryVertical, Math.min(newY, window.innerHeight - config.boundaryVertical));
+                const newX = currentPos.x + normalizedVx * displacement;
+                const newY = currentPos.y + normalizedVy * displacement;
 
-                currentMoveCharacter(boundedX, boundedY);
-                
-                // Verificar si necesitamos hacer scroll automático
-                currentCheckAndScroll();
+                // Aplicar límites de pantalla usando configuración memoizada
+                const boundedX = Math.max(
+                    autoScrollConfig.boundaryHorizontal, 
+                    Math.min(newX, window.innerWidth - autoScrollConfig.boundaryHorizontal)
+                );
+                const boundedY = Math.max(
+                    autoScrollConfig.boundaryVertical, 
+                    Math.min(newY, window.innerHeight - autoScrollConfig.boundaryVertical)
+                );
+
+                moveCharacter(boundedX, boundedY);
+                checkAndScroll();
             }
         }
 
         animationRef.current = requestAnimationFrame(() => animateRef.current!(performance.now()));
-    };
+    }, [calculateDirection, pressedKeys, characterRef, setDirection, getPosition, moveCharacter, checkAndScroll, autoScrollConfig]);
 
     // Loop de animación wrapper
     const animate = useCallback((currentTime: number) => {
-        animateRef.current!(currentTime);
-    }, []); // Sin dependencias
+        animateRef.current(currentTime);
+    }, []);
 
     // Iniciar loop de animación solo cuando el personaje esté disponible
     useEffect(() => {
@@ -171,11 +159,7 @@ export function usePixiMovement() {
         }
 
         lastTimeRef.current = performance.now();
-        const startLoop = () => {
-            animationRef.current = requestAnimationFrame(animate);
-        };
-
-        startLoop();
+        animationRef.current = requestAnimationFrame(animate);
 
         return () => {
             if (animationRef.current) {
@@ -184,8 +168,4 @@ export function usePixiMovement() {
             }
         };
     }, [characterRef, animate]);
-
-    return {
-        currentDirection: lastDirectionRef.current,
-    };
 }

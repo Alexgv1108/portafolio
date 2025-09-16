@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { Direction } from '../models/character/enums/Direction';
-import type { CharacterState, CharacterPosition } from '../models/character/interfaces/CharacterState';
+import { Direction } from '../../models/character/enums/Direction';
+import type { CharacterState, CharacterPosition } from '../../models/character/interfaces/CharacterState';
 
 export const useCharacterStore = create<CharacterState>((set, get) => ({
     // Estado inicial

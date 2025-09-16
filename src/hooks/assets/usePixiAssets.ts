@@ -1,20 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Assets } from 'pixi.js';
-import type { UsePixiAssetsProps } from '../../models/assets/interfaces/UsePixiAssetsProps';
-import { useCharacterStore } from '../../stores/useCharacterStore';
-
-// Importar el parser de GIFs
 import '@pixi/gif';
 
-// Usar solo GIFs para todos los estados
-import characterImg from '../../assets/character-idle.gif';
-import characterUpDown from '../../assets/character-up-down.gif';
-import characterImgRight from '../../assets/character-rigth.gif';
-import characterImgLeft from '../../assets/character-left.gif';
+import characterImg from 'assets/character-idle.gif';
+import characterUpDown from 'assets/character-up-down.gif';
+import characterImgRight from 'assets/character-rigth.gif';
+import characterImgLeft from 'assets/character-left.gif';
+import { useAppStore } from '../stores/useAppStore';
+import { useCharacterStore } from '../stores/useCharacterStore';
+import { useShallow } from 'zustand/shallow';
 
-export function usePixiAssets({ isReady }: UsePixiAssetsProps) {
-    const [assetsLoaded, setAssetsLoaded] = useState(false);
-    const { setAssetsLoaded: setAssetsLoadedInStore } = useCharacterStore();
+export function usePixiAssets() {
+
+    const { isReady } = useAppStore(
+        useShallow((state) => ({
+            isReady: state.isReady,
+        }))
+    );
+
+    const { setAssetsLoaded } = useCharacterStore(
+        useShallow((state) => ({
+            setAssetsLoaded: state.setAssetsLoaded,
+        }))
+    );
 
     useEffect(() => {
         if (!isReady) return;
@@ -28,16 +36,13 @@ export function usePixiAssets({ isReady }: UsePixiAssetsProps) {
                     { alias: 'character-left', src: characterImgLeft },
                     { alias: 'character-up-down', src: characterUpDown }
                 ]);
-                
+
                 setAssetsLoaded(true);
-                setAssetsLoadedInStore(true);
             } catch (error) {
                 console.error('❌ Error loading GIF assets:', error);
             }
         };
 
         loadAssets();
-    }, [isReady, setAssetsLoadedInStore]);
-
-    return { assetsLoaded };
+    }, [isReady, setAssetsLoaded]);
 }

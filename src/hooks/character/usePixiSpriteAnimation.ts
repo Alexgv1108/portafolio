@@ -1,23 +1,34 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Assets, Sprite } from 'pixi.js';
 import { useShallow } from 'zustand/shallow';
 import { Direction } from '../../models/character/enums/Direction';
-import { useCharacterStore } from '../../stores/useCharacterStore';
+import { useCharacterStore } from '../stores/useCharacterStore';
+import { useAppStore } from '../stores/useAppStore';
+import { useEffect, useCallback } from 'react';
 
-export function usePixiSpriteAnimation({ app, assetsLoaded }: { app: any; assetsLoaded: boolean }) {
-    const { characterRef, setCharacterRef } = useCharacterStore(
+export function usePixiSpriteAnimation() {
+
+    const { appZ, appAddChildToContainer } = useAppStore(
+        useShallow((state) => ({
+            appZ: state.appZ,
+            appAddChildToContainer: state.appAddChildToContainer
+        }))
+    );
+
+    const { characterRef, assetsLoaded, direction, setCharacterRef } = useCharacterStore(
         useShallow((state) => ({
             characterRef: state.characterRef,
+            assetsLoaded: state.assetsLoaded,
+            direction: state.direction,
             setCharacterRef: state.setCharacterRef,
         }))
     );
 
-    const updateCharacterSprite = (direction: Direction, moving: boolean) => {
-        if (!app || !assetsLoaded || !characterRef) return;
+    const updateCharacterSprite = useCallback((direction: Direction, moving: boolean) => {
+        if (!appZ || !assetsLoaded || !characterRef) return;
 
-        const currentChar = characterRef as Sprite & { 
-            _textureKey?: string; 
-            destroyed?: boolean; 
+        const currentChar = characterRef as Sprite & {
+            _textureKey?: string;
+            destroyed?: boolean;
         };
         if (!currentChar || currentChar.destroyed) return;
 
@@ -52,7 +63,7 @@ export function usePixiSpriteAnimation({ app, assetsLoaded }: { app: any; assets
             // Todos nuestros assets son GIFs, usar lógica simple
             const currentX = currentChar.x || 0;
             const currentY = currentChar.y || 0;
-            const currentScale = currentChar.scale ? 
+            const currentScale = currentChar.scale ?
                 { x: currentChar.scale.x, y: currentChar.scale.y } : { x: 1, y: 1 };
 
             // Remover sprite actual
@@ -62,6 +73,12 @@ export function usePixiSpriteAnimation({ app, assetsLoaded }: { app: any; assets
 
             // Crear nuevo sprite
             const newSprite = newTexture as Sprite & { _textureKey?: string };
+            
+            // Habilitar anti-aliasing para mejorar la calidad visual
+            if (newSprite.texture && newSprite.texture.source) {
+                newSprite.texture.source.scaleMode = 'linear';
+            }
+            
             newSprite.x = currentX;
             newSprite.y = currentY;
             if (newSprite.scale) {
@@ -72,14 +89,25 @@ export function usePixiSpriteAnimation({ app, assetsLoaded }: { app: any; assets
                 newSprite.anchor.x = 0.5;
                 newSprite.anchor.y = 0.5;
             }
+            
+            // Mejorar la calidad de renderizado
+            newSprite.roundPixels = false;
             newSprite._textureKey = textureKey;
 
-            app.stage.addChild(newSprite);
+            appAddChildToContainer(newSprite);
             setCharacterRef(newSprite);
         } catch (error) {
             console.error('❌ Error updating character sprite:', error);
         }
-    };
+    }, [appZ, assetsLoaded, characterRef, appAddChildToContainer, setCharacterRef]);
+
+    // Escuchar cambios de dirección del store y actualizar sprite
+    useEffect(() => {
+        if (assetsLoaded) {
+            const moving = direction !== Direction.Idle;
+            updateCharacterSprite(direction, moving);
+        }
+    }, [direction, assetsLoaded, updateCharacterSprite]);
 
     return { updateCharacterSprite };
 }

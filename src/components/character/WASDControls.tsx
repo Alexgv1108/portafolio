@@ -1,5 +1,6 @@
 import { useShallow } from "zustand/shallow";
-import { useKeyboardStore } from "../../stores/useKeyboardStore";
+import { useKeyboardStore } from "../../hooks/stores/useKeyboardStore";
+import { useEffect, useState } from "react";
 
 export const WASDControls = () => {
     const { pressedKeys, pressVirtualKey, releaseVirtualKey } = useKeyboardStore(
@@ -10,12 +11,28 @@ export const WASDControls = () => {
         }))
     );
 
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const checkDevice = () => {
+            setIsMobile(window.innerWidth <= 768 || 'ontouchstart' in window);
+        };
+        
+        checkDevice();
+        window.addEventListener('resize', checkDevice);
+        
+        return () => window.removeEventListener('resize', checkDevice);
+    }, []);
+
     const getKeyStyles = (key: string) => {
         const isPressed = pressedKeys.has(key.toLowerCase());
+        const sizeClasses = isMobile ? 'w-14 h-14' : 'w-8 h-8';
+        const textClasses = isMobile ? 'text-xl' : 'text-sm';
+        
         return `
-        w-14 h-14 flex items-center justify-center rounded-xl
+        ${sizeClasses} flex items-center justify-center rounded-xl
         shadow-lg dark:shadow-2xl 
-        text-xl font-bold 
+        ${textClasses} font-bold 
         transition-all duration-300 
         hover:scale-110 hover:shadow-xl dark:hover:border-yellow-400 hover:cursor-pointer
         active:scale-95 focus:outline-none focus:ring-0
@@ -27,8 +44,12 @@ export const WASDControls = () => {
     };
 
     return (
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 select-none">
-            <div className="flex flex-col items-center gap-3">
+        <div className={`fixed z-50 select-none ${
+            isMobile 
+                ? 'bottom-4 left-1/2 -translate-x-1/2' 
+                : 'top-4 left-4'
+        }`}>
+            <div className={`flex flex-col items-center ${isMobile ? 'gap-3' : 'gap-1'}`}>
                 {/* W */}
                 <div className="flex justify-center">
                     <div 
@@ -44,7 +65,7 @@ export const WASDControls = () => {
                 </div>
 
                 {/* A S D */}
-                <div className="flex gap-3">
+                <div className={`flex ${isMobile ? 'gap-3' : 'gap-1'}`}>
                     {["A", "S", "D"].map((key) => (
                         <div
                             key={key}

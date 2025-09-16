@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { KeyboardState } from "../models/keyboard/interfaces/KeyboardState";
+import type { KeyboardState } from "../../models/keyboard/interfaces/KeyboardState";
 
 export const useKeyboardStore = create<KeyboardState>((set, get) => ({
     lastKey: undefined,

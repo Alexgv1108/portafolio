@@ -5,22 +5,14 @@ import { useKeyboardListener } from '../keyboard/useKeyboardListener';
 
 export function usePixiGame() {
     // Inicializar PixiJS
-    const { app, isReady, containerRef } = usePixiApp();
-    
+    usePixiApp();
+
     // Configurar teclado
     useKeyboardListener();
-    
-    // Crear y manejar personaje
-    const { setDirection } = usePixiCharacter({ app, isReady });
-    
-    // Manejar movimiento
-    const { currentDirection: movementDirection } = usePixiMovement();
 
-    return {
-        app,
-        isReady,
-        currentDirection: movementDirection,
-        containerRef,
-        setDirection,
-    };
+    // Crear y manejar personaje
+    usePixiCharacter();
+
+    // Manejar movimiento
+    usePixiMovement();
 }

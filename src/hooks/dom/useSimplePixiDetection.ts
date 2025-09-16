@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useCharacterStore } from '../../stores/useCharacterStore';
+import { useCharacterStore } from '../stores/useCharacterStore';
 
 interface SimpleDetectionProps {
     elementRef: React.RefObject<HTMLElement | null>;
